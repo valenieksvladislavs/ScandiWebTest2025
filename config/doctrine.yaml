@@ -1,0 +1,22 @@
+doctrine:
+  dbal:
+    driver: pdo_mysql
+    host: 127.0.0.1
+    port: 3306
+    dbname: scandi
+    user: scandiweb-test
+    password: kUgZ53-9Bn5Sw-LBg95ds
+    charset: utf8mb4
+
+  orm:
+    auto_generate_proxy_classes: true
+    proxy_dir: '%kernel.cache_dir%/doctrine/proxies'
+    entity_dirs:
+      - '../src/Entity'
+    mappings:
+      App:
+        is_bundle: false
+        type: annotation
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Entity'
+        alias: App
