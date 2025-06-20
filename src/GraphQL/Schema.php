@@ -3,6 +3,7 @@
 namespace App\GraphQL;
 
 use App\GraphQL\Resolvers\CategoryResolver;
+use App\GraphQL\Resolvers\OrderResolver;
 use App\GraphQL\Types\CategoryType;
 use App\GraphQL\Types\ProductType;
 use App\GraphQL\Types\AttributeSetType;
@@ -13,6 +14,8 @@ use App\GraphQL\Resolvers\ProductResolver;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema as GraphQLSchema;
+use App\Service\OrderService;
+use GraphQL\Type\Definition\InputObjectType;
 
 class Schema
 {
@@ -27,6 +30,17 @@ class Schema
     public static function get(): GraphQLSchema
     {
         if (self::$schema === null) {
+            $orderItemInputType = new InputObjectType([
+                'name' => 'OrderItemInput',
+                'fields' => [
+                    'productId' => Type::nonNull(Type::string()),
+                    'name' => Type::nonNull(Type::string()),
+                    'price' => Type::nonNull(Type::float()),
+                    'quantity' => Type::nonNull(Type::int()),
+                    'attributes' => Type::string(),
+                ]
+            ]);
+
             self::$schema = new GraphQLSchema([
                 'query' => new ObjectType([
                     'name' => 'Query',
@@ -62,6 +76,25 @@ class Schema
                             'resolve' => function ($root, $args) {
                                 $resolver = new ProductResolver($GLOBALS['pdo']);
                                 return $resolver->getProduct($args['id']);
+                            }
+                        ]
+                    ]
+                ]),
+                'mutation' => new ObjectType([
+                    'name' => 'Mutation',
+                    'fields' => [
+                        'createOrder' => [
+                            'type' => Type::nonNull(Type::boolean()),
+                            'args' => [
+                                'items' => Type::nonNull(Type::listOf(Type::nonNull($orderItemInputType))),
+                            ],
+                            'resolve' => function ($root, $args) {
+                                $resolver = new OrderResolver($GLOBALS['pdo']);
+                                $items = array_map(function($item) {
+                                    $item['attributes'] = isset($item['attributes']) ? json_decode($item['attributes'], true) : [];
+                                    return $item;
+                                }, $args['items']);
+                                return $resolver->createOrder($items);
                             }
                         ]
                     ]

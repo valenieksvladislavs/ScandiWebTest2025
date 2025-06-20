@@ -23,22 +23,34 @@ const GET_PRODUCTS = gql`
   }
 `;
 
+const CategoryTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 32px 0 24px 0;
+  color: #1d1f22;
+  text-transform: uppercase;
+`;
+
 const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 24px;
+  padding: 0 0 2rem 0;
 `;
 
 const ProductCard = styled(Link)`
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(168, 172, 176, 0.19);
+  display: flex;
+  flex-direction: column;
   position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  padding: 20px;
+  transition: box-shadow 0.2s, transform 0.2s;
   &:hover {
-    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(168, 172, 176, 0.25);
+    transform: translateY(-2px);
     .add-to-cart-btn {
       opacity: 1;
       pointer-events: auto;
@@ -46,47 +58,63 @@ const ProductCard = styled(Link)`
   }
 `;
 
+const ProductImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ProductImage = styled.img`
   width: 100%;
-  height: 300px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 4px;
+  overflow: hidden;
 `;
 
-const ProductName = styled.h2`
-  margin: 1rem 0;
-  font-size: 1.2rem;
-  color: #333;
-`;
-
-const ProductBrand = styled.p`
-  color: #666;
-  margin-bottom: 0.5rem;
-`;
-
-const ProductPrice = styled.p`
-  font-weight: 600;
-  color: #333;
-  margin: 0.5rem 0;
-`;
-
-const OutOfStock = styled.div`
+const OutOfStockOverlay = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.8);
-  padding: 1rem;
-  border-radius: 4px;
-  font-weight: 600;
-  color: #333;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #8d8f9a;
+  font-weight: 400;
+  z-index: 2;
+  pointer-events: none;
+`;
+
+const ProductInfo = styled.div`
+  padding: 16px 16px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const ProductName = styled.div`
+  font-size: 1.1rem;
+  color: #1d1f22;
+  font-weight: 300;
+  margin-bottom: 4px;
+`;
+
+const ProductPrice = styled.div`
+  font-size: 1.1rem;
+  color: #1d1f22;
+  font-weight: 500;
 `;
 
 const AddToCartBtn = styled.button`
   position: absolute;
-  right: 24px;
-  bottom: 24px;
-  background: ${props => props.theme.colors.primary};
+  right: 16px;
+  bottom: -26px;
+  background: #5ece7b;
   border: none;
   border-radius: 50%;
   width: 52px;
@@ -94,70 +122,74 @@ const AddToCartBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
-  z-index: 2;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(94,206,123,0.15);
+  padding: 0;
   svg {
-    width: 24px;
-    height: 24px;
-    fill: #fff;
+    color: #fff;
+    width: 20px;
+    height: 20px;
   }
 `;
 
 const ProductList = () => {
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get('category') || 'All';
   const { addToCart } = useCart();
 
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    variables: { category }
+    variables: { category: category === 'All' ? null : category }
   });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <ProductGrid>
-      {data?.products.map((product: any) => {
-        const price = product.prices[0];
-        return (
-          <ProductCard key={product.id} to={`/product/${product.id}`}>
-            <div style={{ position: 'relative' }}>
-              <ProductImage src={product.gallery[0]} alt={product.name} />
-              {!product.inStock && <OutOfStock>OUT OF STOCK</OutOfStock>}
-              {product.inStock && (
-                <AddToCartBtn
-                  className="add-to-cart-btn"
-                  title="Add to card"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: price.amount,
-                      quantity: 1,
-                      attributes: {},
-                      image: product.gallery?.[0]
-                    })
-                  }}
-                >
-                  <CartIcon color='#fff' />
-                </AddToCartBtn>
-              )}
-            </div>
-            <ProductName>{product.name}</ProductName>
-            <ProductBrand>{product.brand}</ProductBrand>
-            {product.prices.map((price: any) => (
-              <ProductPrice key={price.currency.label}>
-                {price.currency.symbol}{price.amount}
-              </ProductPrice>
-            ))}
-          </ProductCard>
-        );
-      })}
-    </ProductGrid>
+    <>
+      <CategoryTitle>{category}</CategoryTitle>
+      <ProductGrid>
+        {data?.products.map((product: any) => {
+          const price = product.prices[0];
+          const outOfStock = !product.inStock;
+          return (
+            <ProductCard key={product.id} to={`/product/${product.id}?category=${category}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+              <ProductImageWrapper>
+                <ProductImage src={product.gallery[0]} alt={product.name} />
+                {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}
+                {!outOfStock && (
+                  <AddToCartBtn
+                    className="add-to-cart-btn"
+                    title="Add to cart"
+                    onClick={e => {
+                      e.preventDefault();
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: price.amount,
+                        quantity: 1,
+                        attributes: {},
+                        image: product.gallery?.[0]
+                      });
+                    }}
+                  >
+                    <CartIcon />
+                  </AddToCartBtn>
+                )}
+              </ProductImageWrapper>
+              <ProductInfo>
+                <ProductName>{product.name}</ProductName>
+                <ProductPrice>
+                  {price.currency.symbol}{price.amount.toFixed(2)}
+                </ProductPrice>
+              </ProductInfo>
+            </ProductCard>
+          );
+        })}
+      </ProductGrid>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useQuery, gql } from '@apollo/client';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
@@ -30,7 +30,7 @@ const CategoriesMenu = styled.nav`
   gap: 1.5rem;
 `;
 
-const CategoryLink = styled(Link)`
+const CategoryLink = styled(Link)<{ $active?: boolean }>`
   text-decoration: none;
   color: #333;
   font-size: 16px;
@@ -40,17 +40,19 @@ const CategoryLink = styled(Link)`
   padding: 30px 16px;
   transition: color 0.2s;
   border-bottom: 2px solid transparent;
-
-  &:hover, &.active {
+  &:hover {
     color: ${props => props.theme.colors.primary};
     border-bottom: 2px solid ${props => props.theme.colors.primary};
   }
+  ${props => props.$active && `
+    color: ${props.theme.colors.primary};
+    border-bottom: 2px solid ${props.theme.colors.primary};
+  `}
 `;
 
 const CartButton = styled.button`
   background: none;
   border: none;
-  cursor: pointer;
   padding: 0.5rem;
   display: flex;
   align-items: center;
@@ -59,20 +61,26 @@ const CartButton = styled.button`
   color: #333;
   position: relative;
 
-  &:hover {
+  &:hover svg {
     color: #5ece7b;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
   }
 `;
 
 const CartCount = styled.span`
   position: absolute;
-  top: 0;
-  right: 0;
-  background: ${props => props.theme.colors.primary};
+  top: 8px;
+  right: 8px;
+  background: #000;
   color: #fff;
   border-radius: 50%;
-  font-size: 12px;
-  min-width: 20px;
+  font-size: 0.8em;
+  line-height: 100%;
+  width: 20px;
   height: 20px;
   display: flex;
   align-items: center;
@@ -86,16 +94,23 @@ const Header = () => {
   const { items } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const selectedCategory = searchParams.get('category');
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <HeaderContainer>
-      <HeaderContent>
+      <HeaderContent style={{ position: 'relative' }}>
         <CategoriesMenu>
           {data?.categories.map((category: { name: string }) => (
-            <CategoryLink key={category.name} to={`/?category=${category.name}`}>
+            <CategoryLink
+              key={category.name}
+              to={`/?category=${category.name}`}
+              $active={selectedCategory === category.name}
+            >
               {category.name}
             </CategoryLink>
           ))}
