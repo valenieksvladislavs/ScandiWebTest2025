@@ -63,7 +63,12 @@ abstract class BaseEntity
 
         $fields = implode(', ', array_keys($data));
         $placeholders = implode(', ', array_map(fn($key) => ":{$key}", array_keys($data)));
-        $updateFields = implode(', ', array_map(fn($key) => "{$key} = :{$key}", array_keys($data)));
+        $updateFields = implode(', ', array_map(fn($key) => "{$key} = :update_{$key}", array_keys($data)));
+        $dataUpdate = [];
+        foreach ($data as $key => $value) {
+            $dataUpdate["update_$key"] = $value;
+        }
+        $params = array_merge($data, $dataUpdate);
 
         $sql = <<<SQL
             INSERT INTO {$table} ({$fields}) 
@@ -72,7 +77,7 @@ abstract class BaseEntity
             SQL;
             
         $stmt = $this->pdo->prepare($sql);
-        $result = $stmt->execute($data);
+        $result = $stmt->execute($params);
 
         if (!$this->id && $result) {
             $this->id = $this->pdo->lastInsertId();

@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Handle GraphQL requests
+RewriteCond %{REQUEST_URI} ^/graphql/?$
+RewriteRule ^graphql/?$ graphql.php [L]
+
+# Handle other requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L] 

@@ -16,7 +16,11 @@ class Router
     {
         $this->pdo = $pdo;
         $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
-            $r->post('/graphql', [\App\Controller\GraphQL::class, 'handle']);
+            $r->post('/graphql', [\App\Controller\GraphQLController::class, 'handle']);
+            $r->post('/graphql/', [\App\Controller\GraphQLController::class, 'handle']);
+            $r->get('/graphql', [\App\Controller\GraphQLController::class, 'handle']);
+            $r->get('/graphql/', [\App\Controller\GraphQLController::class, 'handle']);
+            $r->get('/test', function() { return 'Test route works!'; });
         });
     }
 

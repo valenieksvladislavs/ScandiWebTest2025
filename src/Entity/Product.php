@@ -182,6 +182,8 @@ class Product extends BaseEntity
         $attributeSetsAcc = [];
         $currenciesAcc = [];
 
+        $priceIds = [];
+
         foreach ($rows as $row) {
             $pid = $row['p_id'];
             if (!$product = $productsAcc[$pid] ?? null) {
@@ -210,7 +212,8 @@ class Product extends BaseEntity
                 }
             }
 
-            if (isset($row['pr_id']) && !empty($row['pr_id'])) {
+            $priceId = $row['pr_id'] ?? null;
+            if ($priceId && !in_array($priceId, $priceIds)) {
                 $price = Price::fromAssoc($pdo, $row, 'pr_');
                 
                 $curId = $row['cur_id'];
@@ -221,6 +224,8 @@ class Product extends BaseEntity
 
                 $price->setCurrency($currency);
                 $product->addPrice($price);
+
+                $priceIds[] = $priceId;
             }
         }
 

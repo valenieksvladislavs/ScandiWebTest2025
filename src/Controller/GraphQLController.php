@@ -6,7 +6,7 @@ use App\GraphQL\Schema;
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Error\DebugFlag;
 
-class GraphQL {
+class GraphQLController {
     public function __construct(private \PDO $pdo)
     {}
 

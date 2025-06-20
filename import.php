@@ -21,7 +21,7 @@ $data = $jsonData['data'];
 // Import categories
 $categories = [];
 foreach ($data['categories'] as $categoryData) {
-    if ($categoryData['name'] === 'All') {
+    if ($categoryData['name'] === 'all') {
         continue;
     }
 
