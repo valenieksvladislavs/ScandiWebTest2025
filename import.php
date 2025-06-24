@@ -54,8 +54,10 @@ foreach ($data['products'] as $productData) {
 
     // Import attribute sets and attributes
     foreach ($productData['attributes'] as $attributeSetData) {
+        $attributeSetId = $productData['id'] . "-" . $attributeSetData['id'];
+
         $attributeSet = new AttributeSet($pdo);
-        $attributeSet->setId($attributeSetData['id']);
+        $attributeSet->setId($attributeSetId);
         $attributeSet->setName($attributeSetData['name']);
         $attributeSet->setType($attributeSetData['type']);
         $attributeSet->setProductId($product->getId());
@@ -64,7 +66,7 @@ foreach ($data['products'] as $productData) {
         // Add attributes to the set
         foreach ($attributeSetData['items'] as $attributeData) {
             $attribute = new Attribute($pdo);
-            $attribute->setId($attributeData['id']);
+            $attribute->setId($attributeSetId . " - " . $attributeData['id']);
             $attribute->setDisplayValue($attributeData['displayValue']);
             $attribute->setValue($attributeData['value']);
             $attribute->setAttributeSetId($attributeSet->getId());
@@ -77,7 +79,7 @@ foreach ($data['products'] as $productData) {
     // Import prices
     foreach ($productData['prices'] as $priceData) {
         $price = new Price($pdo);
-        $price->setId(Uuid::uuid4()->toString());
+        $price->setId($productData['id'] . " - " . $priceData['amount'] . " - " . $currency->getId());
         $price->setAmount($priceData['amount']);
         $price->setCurrencyId($currency->getId());
         $price->setProductId($product->getId());
