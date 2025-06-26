@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
 import ArrowLeft from '../assets/images/arrow-left.svg?react';
 import ArrowRight from '../assets/images/arrow-right.svg?react';
+import { toKebabCase } from '../helpers/to-kebab-case';
 
 const GET_PRODUCT = gql`
   query GetProduct($id: String!) {
@@ -258,7 +259,7 @@ const ProductDetails = () => {
           />
         ))}
       </Thumbnails>
-      <MainImageWrapper>
+      <MainImageWrapper data-testid='product-gallery'>
         <MainImage src={gallery[selectedImage]} alt={product?.name} />
         {gallery.length > 1 && (
           <>
@@ -272,7 +273,7 @@ const ProductDetails = () => {
         {product?.attributes.map((attribute: any) => (
           <AttributeBlock key={attribute.name}>
             <AttributeLabel>{attribute.name}:</AttributeLabel>
-            <AttributeBtnGroup>
+            <AttributeBtnGroup data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>
               {attribute.items.map((item: any) =>
                 attribute.type === 'swatch' ? (
                   <ColorBtn
@@ -314,7 +315,7 @@ const ProductDetails = () => {
           <CartIcon />
           {!product?.inStock ? 'OUT OF STOCK' : 'ADD TO CART'}
         </AddToCartButton>
-        <Description dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
+        <Description data-testid='product-description' dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
       </InfoCol>
     </PageGrid>
   );

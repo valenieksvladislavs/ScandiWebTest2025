@@ -105,17 +105,21 @@ const Header = () => {
     <HeaderContainer>
       <HeaderContent style={{ position: 'relative' }}>
         <CategoriesMenu>
-          {data?.categories.map((category: { name: string }) => (
-            <CategoryLink
-              key={category.name}
-              to={`/?category=${category.name}`}
-              $active={selectedCategory === category.name}
-            >
-              {category.name}
-            </CategoryLink>
-          ))}
+          {data?.categories.map((category: { name: string }) => {
+            const active = selectedCategory === category.name;
+            return (
+              <CategoryLink
+                data-testid={`${active ? 'active-' : ''}category-link`}
+                key={category.name}
+                to={`/?category=${category.name}`}
+                $active={active}
+              >
+                {category.name}
+              </CategoryLink>
+            )
+          })}
         </CategoriesMenu>
-        <CartButton onClick={() => setCartOpen(v => !v)}>
+        <CartButton data-testid='cart-btn' onClick={() => setCartOpen(v => !v)}>
           <CartIcon style={{ color: '#43464E' }} />
           {totalCount > 0 && <CartCount>{totalCount}</CartCount>}
         </CartButton>

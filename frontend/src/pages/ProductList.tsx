@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
+import { toKebabCase } from '../helpers/to-kebab-case';
 
 const GET_PRODUCTS = gql`
   query GetProducts($category: String) {
@@ -155,7 +156,7 @@ const ProductList = () => {
           const price = product.prices[0];
           const outOfStock = !product.inStock;
           return (
-            <ProductCard key={product.id} to={`/product/${product.id}?category=${category}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={`/product/${product.id}?category=${category}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
                 {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}
@@ -163,6 +164,7 @@ const ProductList = () => {
                   <AddToCartBtn
                     className="add-to-cart-btn"
                     title="Add to cart"
+                    data-testid='add-to-cart'
                     onClick={e => {
                       e.preventDefault();
                       addToCart({

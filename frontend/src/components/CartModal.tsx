@@ -5,6 +5,7 @@ import type { CartItem } from '../context/CartContext';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import AddIcon from '../assets/images/add.svg?react';
 import RemoveIcon from '../assets/images/remove.svg?react';
+import { toKebabCase } from '../helpers/to-kebab-case';
 
 const HEADER_HEIGHT = 80;
 const CONTAINER_WIDTH = 1200;
@@ -251,26 +252,32 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
       return (
         <AttributeRow key={attr.name}>
           <AttributeLabel>{attr.name}:</AttributeLabel>
-          <AttributeBtnGroup>
-            {attr.items.map((option: any) =>
-              attr.type === 'swatch' ? (
+          <AttributeBtnGroup data-testid={`cart-item-attribute-${toKebabCase(attr.name)}`}>
+            {attr.items.map((option: any) => {
+              const selected = item.attributes[attr.name] === option.value;
+              const testIdAttr = `cart-item-attribute-${toKebabCase(attr.name)}-${toKebabCase(option.value)}${selected ? '-selected' : ''}`
+              const onClick = () => updateAttributes(item.id, { ...item.attributes, [attr.name]: option.value });
+
+              return attr.type === 'swatch' ? (
                 <ColorBtn
                   key={option.value}
                   color={option.value}
-                  active={item.attributes[attr.name] === option.value}
-                  onClick={() => updateAttributes(item.id, { ...item.attributes, [attr.name]: option.value })}
+                  active={selected}
+                  onClick={onClick}
                   title={option.value}
+                  data-testid={testIdAttr}
                 />
               ) : (
                 <AttributeBtn
                   key={option.value}
-                  active={item.attributes[attr.name] === option.value}
-                  onClick={() => updateAttributes(item.id, { ...item.attributes, [attr.name]: option.value })}
+                  active={selected}
+                  onClick={onClick}
+                  data-testid={testIdAttr}
                 >
                   {option.displayValue}
                 </AttributeBtn>
               )
-            )}
+          })}
           </AttributeBtnGroup>
           {!isSelected && <AttributeWarning>Choose {attr.name.toLowerCase()}</AttributeWarning>}
         </AttributeRow>
@@ -333,9 +340,9 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
                   {renderAttributes(item)}
                 </ItemInfo>
                 <QuantityControls>
-                  <QtyBtn onClick={() => handleInc(item)}><AddIcon /></QtyBtn>
+                  <QtyBtn onClick={() => handleInc(item)} data-testid='cart-item-amount-increase'><AddIcon /></QtyBtn>
                   <span>{item.quantity}</span>
-                  <QtyBtn onClick={() => handleDec(item)}><RemoveIcon /></QtyBtn>
+                  <QtyBtn onClick={() => handleDec(item)} data-testid='cart-item-amount-decrease'><RemoveIcon /></QtyBtn>
                 </QuantityControls>
                 <ItemImage src={item.image} alt={item.name} />
               </CartItemRow>
