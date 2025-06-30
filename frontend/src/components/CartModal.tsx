@@ -24,7 +24,7 @@ const ModalContent = styled.div`
   position: fixed;
   top: ${HEADER_HEIGHT}px;
   right: calc((100vw - ${CONTAINER_WIDTH}px) / 2);
-  background: #fff;
+  background: ${props => props.theme.colors.backgroundLight};
   min-width: 340px;
   max-width: 420px;
   max-height: 90vh;
@@ -39,7 +39,7 @@ const CartTitle = styled.h3`
   font-weight: 700;
   span {
     font-weight: 400;
-    color: #1d1f22;
+    color: ${props => props.theme.colors.text};
     font-size: 1rem;
     margin-left: 4px;
   }
@@ -57,9 +57,9 @@ const CartItemRow = styled.li<{ $invalid?: boolean }>`
   justify-content: space-between;
   gap: 12px;
   padding: 18px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${props => props.theme.colors.borderLight};
   background: ${({ $invalid }) => $invalid ? 'rgba(255, 0, 0, 0.06)' : 'transparent'};
-  border-left: ${({ $invalid }) => $invalid ? '3px solid #d00' : 'none'};
+  border-left: ${({ $invalid, theme }) => $invalid ? `3px solid ${theme.colors.error}` : 'none'};
 `;
 
 const ItemInfo = styled.div`
@@ -71,12 +71,12 @@ const ItemInfo = styled.div`
 
 const ItemName = styled.div`
   font-size: 1.2rem;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin-bottom: 4px;
 `;
 
 const ItemPrice = styled.div`
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   font-weight: 600;
   margin-bottom: 1.2rem;
 `;
@@ -100,9 +100,9 @@ const AttributeBtn = styled.button<{ active?: boolean }>`
   min-height: 32px;
   margin: 4px;
   padding: 0 10px;
-  border: 1px solid #1d1f22;
-  background: ${({ active }) => (active ? '#1d1f22' : '#fff')};
-  color: ${({ active }) => (active ? '#fff' : '#1d1f22')};
+  border: 1px solid ${props => props.theme.colors.text};
+  background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
+  color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
   font-weight: 500;
   font-size: 1em;
   border-radius: 0;
@@ -112,11 +112,11 @@ const AttributeBtn = styled.button<{ active?: boolean }>`
 const ColorBtn = styled.button<{ color: string; active?: boolean }>`
   width: 32px;
   height: 32px;
-  border: 2px solid ${({ active, color }) => (active ? '#5ece7b' : color === '#fff' ? '#ccc' : '#eee')};
+  border: 2px solid ${({ active, color, theme }) => (active ? theme.colors.primary : color === theme.colors.backgroundLight ? '#ccc' : '#eee')};
   background: ${({ color }) => color};
   border-radius: 0;
   margin: 4px;
-  outline: ${({ active }) => (active ? '2px solid #5ece7b' : 'none')};
+  outline: ${({ active, theme }) => (active ? `2px solid ${theme.colors.primary}` : 'none')};
   padding: 0;
 `;
 
@@ -134,9 +134,9 @@ const QtyBtn = styled.button`
   align-items: center;
   width: 32px;
   height: 32px;
-  border: 1px solid #1d1f22;
+  border: 1px solid ${props => props.theme.colors.text};
   border-radius: 0;
-  background: #fff;
+  background: ${props => props.theme.colors.backgroundLight};
   cursor: pointer;
   padding: 0;
 `;
@@ -147,7 +147,7 @@ const ItemImage = styled.img`
 `;
 
 const Empty = styled.div`
-  color: #888;
+  color: ${props => props.theme.colors.cardText};
   text-align: center;
   padding: 32px 0;
 `;
@@ -161,14 +161,8 @@ const TotalRow = styled.div`
   margin: 24px 0 16px 0;
 `;
 
-const Warning = styled.div`
-  color: #d00;
-  font-size: 0.95em;
-  margin-top: 6px;
-`;
-
 const DisabledHint = styled.div`
-  color: #d00;
+  color: ${props => props.theme.colors.error};
   font-size: 0.98em;
   margin-top: 8px;
   text-align: center;
@@ -176,8 +170,8 @@ const DisabledHint = styled.div`
 
 const PlaceOrderBtn = styled.button`
   width: 100%;
-  background: #5ece7b;
-  color: #fff;
+  background: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.backgroundLight};
   border: none;
   border-radius: 4px;
   font-size: 1.1rem;
@@ -189,12 +183,12 @@ const PlaceOrderBtn = styled.button`
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   &:hover {
-    background: #4dbd6a;
+    background: ${props => props.theme.colors.primaryHover};
   }
 `;
 
 const AttributeWarning = styled.div`
-  color: #d00;
+  color: ${props => props.theme.colors.error};
   font-size: 0.95em;
   margin-top: 4px;
 `;

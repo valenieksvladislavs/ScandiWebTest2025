@@ -28,7 +28,7 @@ const CategoryTitle = styled.h1`
   font-size: 2rem;
   font-weight: 400;
   margin: 32px 0 24px 0;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   text-transform: uppercase;
 `;
 
@@ -40,7 +40,7 @@ const ProductGrid = styled.div`
 `;
 
 const ProductCard = styled(Link)`
-  background: #fff;
+  background: ${props => props.theme.colors.backgroundLight};
   box-shadow: 0 2px 8px rgba(168, 172, 176, 0.19);
   display: flex;
   flex-direction: column;
@@ -85,7 +85,7 @@ const OutOfStockOverlay = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  color: #8d8f9a;
+  color: ${props => props.theme.colors.outOfStock};
   font-weight: 400;
   z-index: 2;
   pointer-events: none;
@@ -100,14 +100,14 @@ const ProductInfo = styled.div`
 
 const ProductName = styled.div`
   font-size: 1.1rem;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   font-weight: 300;
   margin-bottom: 4px;
 `;
 
 const ProductPrice = styled.div`
   font-size: 1.1rem;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   font-weight: 500;
 `;
 
@@ -115,7 +115,7 @@ const AddToCartBtn = styled.button`
   position: absolute;
   right: 16px;
   bottom: -26px;
-  background: #5ece7b;
+  background: ${props => props.theme.colors.primary};
   border: none;
   border-radius: 50%;
   width: 52px;
@@ -130,7 +130,7 @@ const AddToCartBtn = styled.button`
   box-shadow: 0 2px 8px rgba(94,206,123,0.15);
   padding: 0;
   svg {
-    color: #fff;
+    color: ${props => props.theme.colors.backgroundLight};
     width: 20px;
     height: 20px;
   }

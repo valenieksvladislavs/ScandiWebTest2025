@@ -55,17 +55,17 @@ const Thumbnail = styled.img<{ active?: boolean }>`
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border: 2px solid ${({ active }) => (active ? '#5ece7b' : 'transparent')};
+  border: 2px solid ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
   border-radius: 4px;
   cursor: pointer;
-  background: #f9f9f9;
+  background: ${props => props.theme.colors.buttonLight};
 `;
 
 const MainImageWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: #f9f9f9;
+  background: ${props => props.theme.colors.buttonLight};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,7 +116,7 @@ const InfoCol = styled.div`
 const ProductName = styled.h1`
   font-size: 2rem;
   font-weight: 600;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin: 0 0 16px 0;
 `;
 
@@ -127,7 +127,7 @@ const AttributeBlock = styled.div`
 const AttributeLabel = styled.div`
   font-size: 1rem;
   font-weight: 700;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin-bottom: 8px;
 `;
 
@@ -139,9 +139,9 @@ const AttributeBtn = styled.button<{ active?: boolean }>`
   min-width: 48px;
   min-height: 40px;
   padding: 0 16px;
-  border: 1px solid #1d1f22;
-  background: ${({ active }) => (active ? '#1d1f22' : '#fff')};
-  color: ${({ active }) => (active ? '#fff' : '#1d1f22')};
+  border: 1px solid ${props => props.theme.colors.text};
+  background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
+  color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
@@ -153,32 +153,32 @@ const AttributeBtn = styled.button<{ active?: boolean }>`
 const ColorBtn = styled.button<{ color: string; active?: boolean }>`
   width: 32px;
   height: 32px;
-  border: 2px solid ${({ active, color }) => (active ? '#5ece7b' : color === '#fff' ? '#ccc' : '#eee')};
+  border: 2px solid ${({ active, color, theme }) => (active ? theme.colors.primary : color === theme.colors.backgroundLight ? '#ccc' : '#eee')};
   background: ${({ color }) => color};
   cursor: pointer;
   border-radius: 0;
   margin-right: 8px;
-  outline: ${({ active }) => (active ? '2px solid #5ece7b' : 'none')};
+  outline: ${({ active, theme }) => (active ? `2px solid ${theme.colors.primary}` : 'none')};
   padding: 0;
 `;
 
 const PriceLabel = styled.div`
   font-size: 1rem;
   font-weight: 700;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin-bottom: 8px;
 `;
 
 const Price = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin-bottom: 24px;
 `;
 
 const AddToCartButton = styled.button`
-  background: #5ece7b;
-  color: white;
+  background: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.backgroundLight};
   border: none;
   padding: 18px 0;
   font-size: 1.1rem;
@@ -192,22 +192,22 @@ const AddToCartButton = styled.button`
   margin-bottom: 24px;
   border-radius: 0;
   &:hover {
-    background: #4dbd6a;
+    background: ${props => props.theme.colors.primaryHover};
   }
   &:disabled {
-    background: #ccc;
+    background: ${props => props.theme.colors.disabled};
     cursor: not-allowed;
   }
   svg {
     width: 24px;
     height: 24px;
-    fill: #fff;
+    fill: ${props => props.theme.colors.backgroundLight};
   }
 `;
 
 const Description = styled.div`
   font-size: 1rem;
-  color: #1d1f22;
+  color: ${props => props.theme.colors.text};
   margin-top: 8px;
   line-height: 1.5;
 `;

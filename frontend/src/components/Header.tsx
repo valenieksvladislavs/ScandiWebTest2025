@@ -30,9 +30,9 @@ const CategoriesMenu = styled.nav`
   gap: 1.5rem;
 `;
 
-const CategoryLink = styled(Link)<{ $active?: boolean }>`
+const CategoryLink = styled(Link) <{ $active?: boolean }>`
   text-decoration: none;
-  color: #333;
+  color: ${props => props.theme.colors.text};
   font-size: 16px;
   font-weight: 500;
   line-height: 120%;
@@ -58,11 +58,11 @@ const CartButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
-  color: #333;
+  color: ${props => props.theme.colors.text};
   position: relative;
 
   &:hover svg {
-    color: #5ece7b;
+    color: ${props => props.theme.colors.primary};
   }
 
   svg {
@@ -75,8 +75,8 @@ const CartCount = styled.span`
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #000;
-  color: #fff;
+  background: ${props => props.theme.colors.text};
+  color: ${props => props.theme.colors.backgroundLight};
   border-radius: 50%;
   font-size: 0.8em;
   line-height: 100%;
@@ -129,4 +129,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;
