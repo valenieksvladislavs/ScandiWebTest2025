@@ -8,7 +8,7 @@ import { theme } from './constants/theme';
 import { CartProvider } from './context/CartContext';
 
 const client = new ApolloClient({
-  uri: 'http://swtest.local/graphql/',
+  uri: import.meta.env.VITE_API_URL,
   cache: new InMemoryCache()
 });
 
