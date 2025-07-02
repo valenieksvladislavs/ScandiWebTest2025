@@ -1,0 +1,11 @@
+[phases.setup]
+aptPkgs = ["apache2"] 
+cmds = [
+  "rm -rf /var/www/html",
+  "ln -s $PWD /var/www/html",
+  "sed -ri 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf",
+  "a2enmod rewrite"
+]
+
+[start]
+cmd = "apache2ctl -D FOREGROUND"
