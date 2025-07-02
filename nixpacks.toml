@@ -1,10 +1,12 @@
 [phases.setup]
-aptPkgs = ["apache2"] 
+aptPkgs = ["apache2"]
 cmds = [
   "rm -rf /var/www/html",
   "ln -s $PWD /var/www/html",
   "sed -ri 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf",
-  "a2enmod rewrite"
+  "a2enmod rewrite",
+  "echo 'ServerName scandiwebtest2025-production.up.railway.app' > /etc/apache2/conf-available/servername.conf",
+  "a2enconf servername"
 ]
 
 [start]
