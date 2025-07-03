@@ -9,8 +9,6 @@ import { CartProvider } from './context/CartContext';
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL,
-  credentials: 'include',
-  headers: { 'Accept': 'application/json' },
   cache: new InMemoryCache()
 });
 
