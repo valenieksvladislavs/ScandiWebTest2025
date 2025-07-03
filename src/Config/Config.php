@@ -12,7 +12,7 @@ class Config
     private function __construct()
     {
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->load();
+        $dotenv->safeLoad();
 
         $this->config = [
             'db' => [
