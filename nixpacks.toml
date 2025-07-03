@@ -1,3 +1,6 @@
+[nix]
+packages = []
+
 [phases.setup]
 aptPkgs = [
   "python3",
