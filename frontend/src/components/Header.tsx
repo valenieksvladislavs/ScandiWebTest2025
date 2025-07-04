@@ -95,11 +95,13 @@ const Header = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const selectedCategory = searchParams.get('category');
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const selectedCategory = pathParts[0] || null;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
+
+  const noSelectedCategory = !selectedCategory || selectedCategory === 'all';
 
   return (
     <HeaderContainer>
@@ -111,13 +113,21 @@ const Header = () => {
               <CategoryLink
                 data-testid={`${active ? 'active-' : ''}category-link`}
                 key={category.name}
-                to={`/?category=${category.name}`}
+                to={`/${category.name}`}
                 $active={active}
               >
                 {category.name}
               </CategoryLink>
             )
           })}
+          <CategoryLink
+            data-testid={`${noSelectedCategory ? 'active-' : ''}category-link`}
+            key='all'
+            to='/all'
+            $active={noSelectedCategory}
+          >
+            All
+          </CategoryLink>
         </CategoriesMenu>
         <CartButton data-testid='cart-btn' onClick={() => setCartOpen(v => !v)}>
           <CartIcon style={{ color: '#43464E' }} />

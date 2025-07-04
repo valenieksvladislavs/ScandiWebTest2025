@@ -1,5 +1,5 @@
 import { useQuery, gql } from '@apollo/client';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
@@ -137,12 +137,12 @@ const AddToCartBtn = styled.button`
 `;
 
 const ProductList = () => {
-  const [searchParams] = useSearchParams();
-  const category = searchParams.get('category') || 'All';
+  const { category } = useParams();
+  const currentCategory = category || 'all';
   const { addToCart } = useCart();
 
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    variables: { category: category === 'All' ? null : category }
+    variables: { category: currentCategory === 'all' ? null : currentCategory }
   });
 
   if (loading) return <div>Loading...</div>;
@@ -150,13 +150,13 @@ const ProductList = () => {
 
   return (
     <>
-      <CategoryTitle>{category}</CategoryTitle>
+      <CategoryTitle>{currentCategory}</CategoryTitle>
       <ProductGrid>
         {data?.products.map((product: any) => {
           const price = product.prices[0];
           const outOfStock = !product.inStock;
           return (
-            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={`/product/${product.id}?category=${category}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={`/${currentCategory}/${product.id}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
                 {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}

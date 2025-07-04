@@ -282,14 +282,14 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Проверка: у всех ли товаров выбраны все обязательные атрибуты
+  // Check: are all required attributes selected for all items
   const allAttributesSelected = items.every(item => {
     const product = getProductById(item.id);
     if (!product || !product.attributes) return true;
     return product.attributes.every((attr: any) => item.attributes && item.attributes[attr.name]);
   });
 
-  // Для каждого товара: true если не все атрибуты выбраны
+  // For each item: true if not all attributes are selected
   const invalidItems = items.map(item => {
     const product = getProductById(item.id);
     if (!product || !product.attributes) return false;
@@ -319,11 +319,11 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
   };
 
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay onClick={onClose} data-testid="cart-overlay">
       <ModalContent onClick={e => e.stopPropagation()}>
         <CartTitle>My Bag,<span> {totalCount} items</span></CartTitle>
         {items.length === 0 ? (
-          <Empty>Корзина пуста</Empty>
+          <Empty>Cart is empty</Empty>
         ) : (
           <CartList>
             {items.map((item, idx) => (

@@ -33,7 +33,8 @@ function App() {
               <MainContent>
                 <Routes>
                   <Route path="/" element={<ProductList />} />
-                  <Route path="/product/:id" element={<ProductDetails />} />
+                  <Route path=":category" element={<ProductList />} />
+                  <Route path=":category/:id" element={<ProductDetails />} />
                 </Routes>
               </MainContent>
             </AppContainer>
