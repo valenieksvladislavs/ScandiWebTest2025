@@ -156,7 +156,7 @@ const ProductList = () => {
           const price = product.prices[0];
           const outOfStock = !product.inStock;
           return (
-            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={`/${currentCategory}/${product.id}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+            <ProductCard data-testid={`product-${toKebabCase(product.id)}`} key={product.id} to={`/${currentCategory}/${product.id}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
                 {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}
