@@ -10,7 +10,7 @@ import { CartUIProvider, useCartUI } from './context/CartUIContext';
 import CartModal from './components/CartModal';
 
 const client = new ApolloClient({
-  uri: 'http://swtest.local/graphql/',
+  uri: import.meta.env.VITE_API_URL,
   cache: new InMemoryCache()
 });
 
