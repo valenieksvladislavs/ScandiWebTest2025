@@ -277,6 +277,7 @@ const ProductDetails = () => {
               {attribute.items.map((item: any) =>
                 attribute.type === 'swatch' ? (
                   <ColorBtn
+                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${item.value}`}
                     key={item.value}
                     color={item.value}
                     active={selectedAttributes[attribute.name] === item.value}
@@ -284,6 +285,7 @@ const ProductDetails = () => {
                   />
                 ) : (
                   <AttributeBtn
+                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${item.value}`}
                     key={item.value}
                     active={selectedAttributes[attribute.name] === item.value}
                     onClick={() => handleAttributeSelect(attribute.name, item.value)}
@@ -302,6 +304,7 @@ const ProductDetails = () => {
           </Price>
         </div>
         <AddToCartButton
+          data-testid='add-to-cart'
           disabled={!product?.inStock || !isAllAttributesSelected}
           onClick={() => product && price && addToCart({
             id: product.id,

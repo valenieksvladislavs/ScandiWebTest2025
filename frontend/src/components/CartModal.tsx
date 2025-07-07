@@ -249,7 +249,7 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
           <AttributeBtnGroup data-testid={`cart-item-attribute-${toKebabCase(attr.name)}`}>
             {attr.items.map((option: any) => {
               const selected = item.attributes[attr.name] === option.value;
-              const testIdAttr = `cart-item-attribute-${toKebabCase(attr.name)}-${toKebabCase(option.value)}${selected ? '-selected' : ''}`
+              const testIdAttr = `cart-item-attribute-${toKebabCase(attr.name)}-${option.value}${selected ? '-selected' : ''}`
               const onClick = () => updateAttributes(item.id, { ...item.attributes, [attr.name]: option.value });
 
               return attr.type === 'swatch' ? (
