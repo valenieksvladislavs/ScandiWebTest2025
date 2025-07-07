@@ -1,5 +1,5 @@
-export const toKebabCase = (str: string): string => 
+export const toKebabCase = (str: string): string =>
   str
-    .replace(/([a-z])([A-Z])/g, '$1-$2') // camelCase to kebab-case
-    .replace(/[\s_]+/g, '-')             // spaces/underscores to dash
-    .toLowerCase();
+    .match(/[A-Za-z0-9]+/g)               // pull out groups of letters/digits
+    ?.map(word => word.toLowerCase())     // to lowercase
+    .join('-') || '';                     // join with '-'
