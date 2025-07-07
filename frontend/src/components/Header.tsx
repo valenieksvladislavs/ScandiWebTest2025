@@ -150,7 +150,7 @@ const Header = () => {
             )
           })}
         </CategoriesMenu>
-        <CartButton onClick={toggle}>
+        <CartButton data-testid='cart-btn' onClick={toggle}>
           <CartIcon style={{ color: '#43464E' }} />
           {totalCount > 0 && <CartCount>{totalCount}</CartCount>}
         </CartButton>
