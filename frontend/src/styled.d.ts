@@ -36,6 +36,7 @@ declare module 'styled-components' {
       buttonPadding: string;
       buttonFontSize: string;
       h1FontSize: string;
+      headerHeight: string;
     };
   }
 }

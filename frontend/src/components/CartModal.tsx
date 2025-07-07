@@ -7,27 +7,31 @@ import AddIcon from '../assets/images/add.svg?react';
 import RemoveIcon from '../assets/images/remove.svg?react';
 import { toKebabCase } from '../helpers/to-kebab-case';
 
-const HEADER_HEIGHT = 80;
-const CONTAINER_WIDTH = 1200;
-
 const ModalOverlay = styled.div`
   position: fixed;
-  top: ${HEADER_HEIGHT}px;
+  top: ${({ theme }) => theme.sizes.headerHeight};
   left: 0;
-  width: 100vw;
-  height: calc(100vh - ${HEADER_HEIGHT}px);
+  right: 0;
+  bottom: 0;
   background: rgba(0,0,0,0.2);
   z-index: 1000;
+  display: flex;
+  justify-content: center;
+`;
+
+const ModalContainer = styled.div`
+  width: 100%;
+  max-width: ${({ theme }) => theme.sizes.rootMaxWidth};
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
 `;
 
 const ModalContent = styled.div`
-  position: fixed;
-  top: ${HEADER_HEIGHT}px;
-  right: calc((100vw - ${CONTAINER_WIDTH}px) / 2);
   background: ${props => props.theme.colors.backgroundLight};
   min-width: 340px;
   max-width: 420px;
-  max-height: 90vh;
+  max-height: 100%;
   overflow-y: auto;
   padding: 24px 24px 16px 24px;
   margin: 0;
@@ -319,39 +323,41 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
   };
 
   return (
-    <ModalOverlay onClick={onClose} data-testid="cart-overlay">
-      <ModalContent onClick={e => e.stopPropagation()}>
-        <CartTitle>My Bag,<span> {totalCount} items</span></CartTitle>
-        {items.length === 0 ? (
-          <Empty>Cart is empty</Empty>
-        ) : (
-          <CartList>
-            {items.map((item, idx) => (
-              <CartItemRow key={item.id} $invalid={invalidItems[idx]}>
-                <ItemInfo>
-                  <ItemName>{item.name}</ItemName>
-                  <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
-                  {renderAttributes(item)}
-                </ItemInfo>
-                <QuantityControls>
-                  <QtyBtn onClick={() => handleInc(item)} data-testid='cart-item-amount-increase'><AddIcon /></QtyBtn>
-                  <span>{item.quantity}</span>
-                  <QtyBtn onClick={() => handleDec(item)} data-testid='cart-item-amount-decrease'><RemoveIcon /></QtyBtn>
-                </QuantityControls>
-                <ItemImage src={item.image} alt={item.name} />
-              </CartItemRow>
-            ))}
-          </CartList>
-        )}
-        <TotalRow>
-          <span>Total</span>
-          <span>${total.toFixed(2)}</span>
-        </TotalRow>
-        <PlaceOrderBtn onClick={handlePlaceOrder} disabled={orderLoading || items.length === 0 || !allAttributesSelected}>
-          {orderLoading ? 'Ordering...' : 'PLACE ORDER'}
-        </PlaceOrderBtn>
-        {!allAttributesSelected && <DisabledHint>Choose all options</DisabledHint>}
-      </ModalContent>
+    <ModalOverlay onClick={onClose}>
+      <ModalContainer>
+        <ModalContent onClick={e => e.stopPropagation()} data-testid="cart-overlay">
+          <CartTitle>My Bag,<span> {totalCount} items</span></CartTitle>
+          {items.length === 0 ? (
+            <Empty>Cart is empty</Empty>
+          ) : (
+            <CartList>
+              {items.map((item, idx) => (
+                <CartItemRow key={item.id} $invalid={invalidItems[idx]}>
+                  <ItemInfo>
+                    <ItemName>{item.name}</ItemName>
+                    <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
+                    {renderAttributes(item)}
+                  </ItemInfo>
+                  <QuantityControls>
+                    <QtyBtn onClick={() => handleInc(item)} data-testid='cart-item-amount-increase'><AddIcon /></QtyBtn>
+                    <span>{item.quantity}</span>
+                    <QtyBtn onClick={() => handleDec(item)} data-testid='cart-item-amount-decrease'><RemoveIcon /></QtyBtn>
+                  </QuantityControls>
+                  <ItemImage src={item.image} alt={item.name} />
+                </CartItemRow>
+              ))}
+            </CartList>
+          )}
+          <TotalRow>
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </TotalRow>
+          <PlaceOrderBtn onClick={handlePlaceOrder} disabled={orderLoading || items.length === 0 || !allAttributesSelected}>
+            {orderLoading ? 'Ordering...' : 'PLACE ORDER'}
+          </PlaceOrderBtn>
+          {!allAttributesSelected && <DisabledHint>Choose all options</DisabledHint>}
+        </ModalContent>
+      </ModalContainer>
     </ModalOverlay>
   );
 };

@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
-import { useState } from 'react';
-import CartModal from './CartModal';
+import { useCartUI } from '../context/CartUIContext';
 
 const GET_CATEGORIES = gql`
   query GetCategories {
@@ -15,11 +14,19 @@ const GET_CATEGORIES = gql`
 `;
 
 const HeaderContainer = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: ${props => props.theme.colors.backgroundLight};
 `;
 
 const HeaderContent = styled.div`
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.sizes.rootMaxWidth};
+  height: ${({ theme }) => theme.sizes.headerHeight};
   margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,13 +38,16 @@ const CategoriesMenu = styled.nav`
 `;
 
 const CategoryLink = styled(Link) <{ $active?: boolean }>`
+  display: flex;
+  align-items: center;
+  height: ${({ theme }) => theme.sizes.headerHeight};
   text-decoration: none;
   color: ${props => props.theme.colors.text};
   font-size: 16px;
   font-weight: 500;
   line-height: 120%;
   text-transform: uppercase;
-  padding: 30px 16px;
+  padding: 0 16px;
   transition: color 0.2s;
   border-bottom: 2px solid transparent;
   &:hover {
@@ -92,7 +102,7 @@ const CartCount = styled.span`
 const Header = () => {
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   const { items } = useCart();
-  const [cartOpen, setCartOpen] = useState(false);
+  const { toggle, isOpen } = useCartUI();
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const location = useLocation();
   const pathParts = location.pathname.split('/').filter(Boolean);
@@ -107,6 +117,20 @@ const Header = () => {
     <HeaderContainer>
       <HeaderContent style={{ position: 'relative' }}>
         <CategoriesMenu>
+          <CategoryLink
+            data-testid={`${noSelectedCategory ? 'active-' : ''}category-link`}
+            key='all'
+            to='/all'
+            $active={noSelectedCategory}
+            onClick={() => {
+              if (isOpen) {
+                toggle();
+              }
+            }}
+          >
+            All
+          </CategoryLink>
+
           {data?.categories.map((category: { name: string }) => {
             const active = selectedCategory === category.name;
             return (
@@ -115,25 +139,21 @@ const Header = () => {
                 key={category.name}
                 to={`/${category.name}`}
                 $active={active}
+                onClick={() => {
+                  if (isOpen) {
+                    toggle();
+                  }
+                }}
               >
                 {category.name}
               </CategoryLink>
             )
           })}
-          <CategoryLink
-            data-testid={`${noSelectedCategory ? 'active-' : ''}category-link`}
-            key='all'
-            to='/all'
-            $active={noSelectedCategory}
-          >
-            All
-          </CategoryLink>
         </CategoriesMenu>
-        <CartButton data-testid='cart-btn' onClick={() => setCartOpen(v => !v)}>
+        <CartButton onClick={toggle}>
           <CartIcon style={{ color: '#43464E' }} />
           {totalCount > 0 && <CartCount>{totalCount}</CartCount>}
         </CartButton>
-        {cartOpen && <CartModal onClose={() => setCartOpen(false)} />}
       </HeaderContent>
     </HeaderContainer>
   );

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
 import { toKebabCase } from '../helpers/to-kebab-case';
+import { useCartUI } from '../context/CartUIContext';
 
 const GET_PRODUCTS = gql`
   query GetProducts($category: String) {
@@ -139,6 +140,7 @@ const AddToCartBtn = styled.button`
 const ProductList = () => {
   const { category } = useParams();
   const currentCategory = category || 'all';
+  const { toggle } = useCartUI();
   const { addToCart } = useCart();
 
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
@@ -156,7 +158,7 @@ const ProductList = () => {
           const price = product.prices[0];
           const outOfStock = !product.inStock;
           return (
-            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={`/${currentCategory}/${product.id}`} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={!outOfStock ? `/${currentCategory}/${product.id}` : ''} style={{ opacity: outOfStock ? 0.5 : 1 }}>
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
                 {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}
@@ -175,6 +177,7 @@ const ProductList = () => {
                         attributes: {},
                         image: product.gallery?.[0]
                       });
+                      toggle();
                     }}
                   >
                     <CartIcon />

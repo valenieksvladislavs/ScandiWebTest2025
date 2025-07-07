@@ -7,7 +7,7 @@ import CartIcon from '../assets/images/cart.svg?react';
 import ArrowLeft from '../assets/images/arrow-left.svg?react';
 import ArrowRight from '../assets/images/arrow-right.svg?react';
 import { toKebabCase } from '../helpers/to-kebab-case';
-
+import { useCartUI } from '../context/CartUIContext';
 const GET_PRODUCT = gql`
   query GetProduct($id: String!) {
     product(id: $id) {
@@ -37,12 +37,20 @@ const GET_PRODUCT = gql`
   }
 `;
 
-const PageGrid = styled.div`
-  display: grid;
-  grid-template-columns: 120px 1fr 1fr;
+const PageContainer = styled.div`
+  display: flex;
   gap: 40px;
-  max-width: 1200px;
   margin: 40px auto 0 auto;
+  align-items: flex-start;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const Gallery = styled.div`
+  display: flex;
+  flex: 1;
 `;
 
 const Thumbnails = styled.div`
@@ -62,13 +70,12 @@ const Thumbnail = styled.img<{ active?: boolean }>`
 `;
 
 const MainImageWrapper = styled.div`
+  flex: 1;
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: ${props => props.theme.colors.buttonLight};
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 1 / 1;
 `;
 
 const MainImage = styled.img`
@@ -108,9 +115,14 @@ const ArrowRightBtn = styled(ArrowBtn)`
 
 const InfoCol = styled.div`
   display: flex;
+  width: 400px;
   flex-direction: column;
   justify-content: flex-start;
   gap: 24px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 
 const ProductName = styled.h1`
@@ -217,6 +229,7 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
   const { addToCart } = useCart();
+  const { toggle } = useCartUI();
 
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: { id }
@@ -248,52 +261,59 @@ const ProductDetails = () => {
   };
 
   return (
-    <PageGrid>
-      <Thumbnails>
-        {gallery.map((image: string, index: number) => (
-          <Thumbnail
-            key={index}
-            src={image}
-            active={index === selectedImage}
-            onClick={() => setSelectedImage(index)}
-          />
-        ))}
-      </Thumbnails>
-      <MainImageWrapper data-testid='product-gallery'>
-        <MainImage src={gallery[selectedImage]} alt={product?.name} />
-        {gallery.length > 1 && (
-          <>
-            <ArrowLeftBtn onClick={handlePrev} style={{ left: 12 }}><ArrowLeft /></ArrowLeftBtn>
-            <ArrowRightBtn onClick={handleNext} style={{ right: 12 }}><ArrowRight /></ArrowRightBtn>
-          </>
-        )}
-      </MainImageWrapper>
+    <PageContainer>
+      <Gallery data-testid='product-gallery'>
+        <Thumbnails>
+          {gallery.map((image: string, index: number) => (
+            <Thumbnail
+              key={index}
+              src={image}
+              active={index === selectedImage}
+              onClick={() => setSelectedImage(index)}
+            />
+          ))}
+        </Thumbnails>
+        <MainImageWrapper>
+          <MainImage src={gallery[selectedImage]} alt={product?.name} />
+          {gallery.length > 1 && (
+            <>
+              <ArrowLeftBtn onClick={handlePrev} style={{ left: 12 }}><ArrowLeft /></ArrowLeftBtn>
+              <ArrowRightBtn onClick={handleNext} style={{ right: 12 }}><ArrowRight /></ArrowRightBtn>
+            </>
+          )}
+        </MainImageWrapper>
+      </Gallery>
       <InfoCol>
         <ProductName>{product?.name}</ProductName>
         {product?.attributes.map((attribute: any) => (
           <AttributeBlock key={attribute.name}>
             <AttributeLabel>{attribute.name}:</AttributeLabel>
             <AttributeBtnGroup data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>
-              {attribute.items.map((item: any) =>
-                attribute.type === 'swatch' ? (
+              {attribute.items.map((item: any) => {
+                const testId = `product-attribute-${toKebabCase(attribute.name)}-${item.value}`;
+                const onClick = () => {
+                  handleAttributeSelect(attribute.name, item.value);
+                }
+
+                return attribute.type === 'swatch' ? (
                   <ColorBtn
-                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${item.value}`}
+                    data-testid={testId}
                     key={item.value}
                     color={item.value}
                     active={selectedAttributes[attribute.name] === item.value}
-                    onClick={() => handleAttributeSelect(attribute.name, item.value)}
+                    onClick={onClick}
                   />
                 ) : (
                   <AttributeBtn
-                    data-testid={`product-attribute-${toKebabCase(attribute.name)}-${item.value}`}
+                    data-testid={testId}
                     key={item.value}
                     active={selectedAttributes[attribute.name] === item.value}
-                    onClick={() => handleAttributeSelect(attribute.name, item.value)}
+                    onClick={onClick}
                   >
                     {item.displayValue}
                   </AttributeBtn>
                 )
-              )}
+              })}
             </AttributeBtnGroup>
           </AttributeBlock>
         ))}
@@ -306,21 +326,24 @@ const ProductDetails = () => {
         <AddToCartButton
           data-testid='add-to-cart'
           disabled={!product?.inStock || !isAllAttributesSelected}
-          onClick={() => product && price && addToCart({
-            id: product.id,
-            name: product.name,
-            price: price.amount,
-            quantity: 1,
-            attributes: selectedAttributes,
-            image: product.gallery?.[0]
-          })}
+          onClick={() => {
+            toggle();
+            product && price && addToCart({
+              id: product.id,
+              name: product.name,
+              price: price.amount,
+              quantity: 1,
+              attributes: selectedAttributes,
+              image: product.gallery?.[0]
+            });
+          }}
         >
           <CartIcon />
           {!product?.inStock ? 'OUT OF STOCK' : 'ADD TO CART'}
         </AddToCartButton>
         <Description data-testid='product-description' dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
       </InfoCol>
-    </PageGrid>
+    </PageContainer>
   );
 };
 

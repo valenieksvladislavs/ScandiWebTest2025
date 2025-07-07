@@ -25,6 +25,7 @@ export const theme: DefaultTheme = {
     white: '#fff',
   },
   sizes: {
+    headerHeight: '80px',
     rootMaxWidth: '1280px',
     rootPadding: '2rem',
     logoHeight: '6em',
