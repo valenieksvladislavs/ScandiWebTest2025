@@ -7,7 +7,7 @@ namespace App\Entity;
 class Price extends BaseEntity
 {
     private float $amount;
-    
+
     private string $currencyId;
 
     private string $productId;
@@ -51,7 +51,7 @@ class Price extends BaseEntity
     {
         return $this->currency;
     }
-    
+
     public function setCurrency(Currency $currency): self
     {
         $this->currency = $currency;
@@ -59,25 +59,25 @@ class Price extends BaseEntity
     }
 
     protected static function getTableName(): string
-	{
-		return 'prices';
-	}
+    {
+        return 'prices';
+    }
 
-	protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
-	{
-		return (new self($pdo))
-			->setId($row["{$prefix}id"] ?? null)
-			->setAmount(floatval($row["{$prefix}amount"] ?? null))
+    protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
+    {
+        return (new self($pdo))
+            ->setId($row["{$prefix}id"] ?? null)
+            ->setAmount(floatval($row["{$prefix}amount"] ?? null))
             ->setCurrencyId($row["{$prefix}currency_id"] ?? null)
             ->setProductId($row["{$prefix}product_id"] ?? null);
-	}
+    }
 
-	protected function getDataForSave(): array
-	{
-		return [
-			'amount' => $this->amount,
-			'currency_id' => $this->currencyId,
-			'product_id' => $this->productId
-		];
-	}
+    protected function getDataForSave(): array
+    {
+        return [
+            'amount' => $this->amount,
+            'currency_id' => $this->currencyId,
+            'product_id' => $this->productId
+        ];
+    }
 }

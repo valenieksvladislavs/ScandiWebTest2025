@@ -64,4 +64,4 @@ class ProductType extends ObjectType
             ]
         ]);
     }
-} 
+}

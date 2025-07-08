@@ -10,7 +10,8 @@ use PDO;
 class ProductResolver
 {
     public function __construct(private PDO $pdo)
-    {}
+    {
+    }
 
     public function getProducts(?string $category = null): array
     {
@@ -21,4 +22,4 @@ class ProductResolver
     {
         return Product::get($this->pdo, $id);
     }
-} 
+}

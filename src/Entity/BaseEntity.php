@@ -9,7 +9,8 @@ abstract class BaseEntity
     protected string $id;
 
     public function __construct(protected readonly \PDO $pdo)
-    {}
+    {
+    }
 
     public function getId(): string
     {
@@ -17,23 +18,23 @@ abstract class BaseEntity
     }
 
     public function setId(string $id): static
-	{
-		$this->id = $id;
-		return $this;
-	}
-    
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public static function get(\PDO $pdo, string $id): ?self
     {
         $table = static::getTableName();
         $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE id = :id");
-		$stmt->execute(['id' => $id]);
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-		if (!$row) {
-			return null;
-		}
+        if (!$row) {
+            return null;
+        }
 
-		return static::fromAssoc($pdo, $row);
+        return static::fromAssoc($pdo, $row);
     }
 
     /**
@@ -43,23 +44,23 @@ abstract class BaseEntity
     {
         $table = static::getTableName();
         $stmt = $pdo->prepare("SELECT * FROM {$table}");
-		$stmt->execute();
-		$rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-		if (!$rows || count($rows) === 0) {
-			return [];
-		}
+        if (!$rows || count($rows) === 0) {
+            return [];
+        }
 
-		return array_map(function ($row) use ($pdo) {
-			return static::fromAssoc($pdo, $row);
-		}, $rows);
+        return array_map(function ($row) use ($pdo) {
+            return static::fromAssoc($pdo, $row);
+        }, $rows);
     }
 
     public function save(): bool
     {
         $table = static::getTableName();
         $data = $this->getDataForSave();
-        
+
         if (!empty($this->id)) {
             $data['id'] = $this->id;
         }
@@ -78,7 +79,7 @@ abstract class BaseEntity
             VALUES ({$placeholders})
             ON DUPLICATE KEY UPDATE {$updateFields}
             SQL;
-            
+
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute($params);
 

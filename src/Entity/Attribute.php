@@ -7,9 +7,9 @@ namespace App\Entity;
 class Attribute extends BaseEntity
 {
     private string $displayValue;
-    
+
     private string $value;
-    
+
     private string $attributeSetId;
 
     public function getDisplayValue(): string
@@ -46,25 +46,25 @@ class Attribute extends BaseEntity
     }
 
     protected static function getTableName(): string
-	{
-		return 'attributes';
-	}
+    {
+        return 'attributes';
+    }
 
-	protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
-	{
-		return (new self($pdo))
-			->setId($row["{$prefix}id"] ?? null)
-			->setDisplayValue($row["{$prefix}display_value"] ?? null)
-			->setValue($row["{$prefix}value"] ?? null)
+    protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
+    {
+        return (new self($pdo))
+            ->setId($row["{$prefix}id"] ?? null)
+            ->setDisplayValue($row["{$prefix}display_value"] ?? null)
+            ->setValue($row["{$prefix}value"] ?? null)
             ->setAttributeSetId($row["{$prefix}attribute_set_id"] ?? null);
-	}
+    }
 
-	protected function getDataForSave(): array
-	{
-		return [
-			'display_value' => $this->displayValue,
-			'value' => $this->value,
-			'attribute_set_id' => $this->attributeSetId
-		];
-	}
+    protected function getDataForSave(): array
+    {
+        return [
+            'display_value' => $this->displayValue,
+            'value' => $this->value,
+            'attribute_set_id' => $this->attributeSetId
+        ];
+    }
 }

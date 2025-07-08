@@ -6,8 +6,9 @@ namespace App\Config;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use function FastRoute\simpleDispatcher;
 use PDO;
+
+use function FastRoute\simpleDispatcher;
 
 class Router
 {
@@ -22,7 +23,9 @@ class Router
             $r->post('/graphql/', [\App\Controller\GraphQLController::class, 'handle']);
             $r->get('/graphql', [\App\Controller\GraphQLController::class, 'handle']);
             $r->get('/graphql/', [\App\Controller\GraphQLController::class, 'handle']);
-            $r->get('/test', function() { return 'Test route works!'; });
+            $r->get('/test', function () {
+                return 'Test route works!';
+            });
         });
     }
 

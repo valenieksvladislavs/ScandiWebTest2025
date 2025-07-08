@@ -29,4 +29,4 @@ class PriceType extends ObjectType
             ]
         ]);
     }
-} 
+}

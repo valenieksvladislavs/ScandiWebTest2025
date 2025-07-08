@@ -45,6 +45,10 @@ class Database
         return $this->connection;
     }
 
-    public function __clone() {}
-    public function __wakeup() {}
+    public function __clone()
+    {
+    }
+    public function __wakeup()
+    {
+    }
 }

@@ -10,7 +10,9 @@ use PDO;
 
 class OrderResolver
 {
-    public function __construct(private PDO $pdo) {}
+    public function __construct(private PDO $pdo)
+    {
+    }
 
     /**
      * @param array $items

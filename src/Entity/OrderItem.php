@@ -20,25 +20,70 @@ class OrderItem extends BaseEntity
         $this->id = Uuid::uuid4()->toString();
     }
 
-    public function getOrderId(): string { return $this->orderId; }
-    public function setOrderId(string $orderId): self { $this->orderId = $orderId; return $this; }
+    public function getOrderId(): string
+    {
+        return $this->orderId;
+    }
+    public function setOrderId(string $orderId): self
+    {
+        $this->orderId = $orderId;
+        return $this;
+    }
 
-    public function getProductId(): string { return $this->productId; }
-    public function setProductId(string $productId): self { $this->productId = $productId; return $this; }
+    public function getProductId(): string
+    {
+        return $this->productId;
+    }
+    public function setProductId(string $productId): self
+    {
+        $this->productId = $productId;
+        return $this;
+    }
 
-    public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = $name; return $this; }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
 
-    public function getPrice(): float { return $this->price; }
-    public function setPrice(float $price): self { $this->price = $price; return $this; }
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+        return $this;
+    }
 
-    public function getQuantity(): int { return $this->quantity; }
-    public function setQuantity(int $quantity): self { $this->quantity = $quantity; return $this; }
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+        return $this;
+    }
 
-    public function getAttributes(): array { return $this->attributes; }
-    public function setAttributes(array $attributes): self { $this->attributes = $attributes; return $this; }
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+    public function setAttributes(array $attributes): self
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
 
-    protected static function getTableName(): string { return 'order_items'; }
+    protected static function getTableName(): string
+    {
+        return 'order_items';
+    }
 
     protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
     {
@@ -65,4 +110,4 @@ class OrderItem extends BaseEntity
             'attributes' => json_encode($this->attributes),
         ];
     }
-} 
+}

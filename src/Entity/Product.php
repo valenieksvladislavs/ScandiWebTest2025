@@ -7,15 +7,15 @@ namespace App\Entity;
 class Product extends BaseEntity
 {
     private string $brand;
-    
+
     private string $name;
-    
+
     private bool $inStock;
-    
+
     private array $gallery = [];
-    
+
     private ?string $description = null;
-    
+
     private string $categoryId;
 
     private Category $category;
@@ -146,34 +146,34 @@ class Product extends BaseEntity
     }
 
     protected static function getTableName(): string
-	{
-		return 'products';
-	}
+    {
+        return 'products';
+    }
 
-	protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
-	{
-		return (new self($pdo))
-			->setId($row["{$prefix}id"] ?? '')
+    protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
+    {
+        return (new self($pdo))
+            ->setId($row["{$prefix}id"] ?? '')
             ->setBrand($row["{$prefix}brand"] ?? '')
-			->setName($row["{$prefix}name"] ?? '')
+            ->setName($row["{$prefix}name"] ?? '')
             ->setInStock(!!$row["{$prefix}in_stock"] ?? false)
             ->setDescription($row["{$prefix}description"] ?? null)
             ->setGallery(json_decode($row["{$prefix}gallery"] ?? ''))
             ->setCategoryId($row["{$prefix}category_id"] ?? '');
-	}
+    }
 
-	protected function getDataForSave(): array
-	{
-		return [
-			'brand' => $this->brand,
-			'name' => $this->name,
-			'in_stock' => (int)$this->inStock,
-			'description' => $this->description,
-			'gallery' => json_encode($this->gallery),
-			'category_id' => $this->categoryId
-		];
-	}
-    
+    protected function getDataForSave(): array
+    {
+        return [
+            'brand' => $this->brand,
+            'name' => $this->name,
+            'in_stock' => (int)$this->inStock,
+            'description' => $this->description,
+            'gallery' => json_encode($this->gallery),
+            'category_id' => $this->categoryId
+        ];
+    }
+
     private static function hydrateFromRows(\PDO $pdo, array $rows): array
     {
         if (!$rows || count($rows) === 0) {
@@ -208,7 +208,7 @@ class Product extends BaseEntity
                     $attributeSetsAcc[$asId] = $attributeSet;
                     $product->addAttribute($attributeSet);
                 }
-                
+
                 if (isset($row['ai_id']) && !empty($row['ai_id'])) {
                     $attributeItem = Attribute::fromAssoc($pdo, $row, 'ai_');
                     $attributeSet->addAttribute($attributeItem);
@@ -218,7 +218,7 @@ class Product extends BaseEntity
             $priceId = $row['pr_id'] ?? null;
             if ($priceId && !in_array($priceId, $priceIds)) {
                 $price = Price::fromAssoc($pdo, $row, 'pr_');
-                
+
                 $curId = $row['cur_id'];
                 if (!$currency = $currenciesAcc[$curId] ?? null) {
                     $currency = Currency::fromAssoc($pdo, $row, 'cur_');
@@ -281,7 +281,7 @@ class Product extends BaseEntity
     public static function get(\PDO $pdo, string $id): ?self
     {
         $sql = self::getBaseQuery() . " WHERE p.id = :id";
-        
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -299,7 +299,7 @@ class Product extends BaseEntity
             $sql .= " WHERE p.category_id = :category_id";
             $params['category_id'] = $categoryId;
         }
-        
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);

@@ -8,11 +8,14 @@ use App\GraphQL\Schema;
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Error\DebugFlag;
 
-class GraphQLController {
+class GraphQLController
+{
     public function __construct(private \PDO $pdo)
-    {}
+    {
+    }
 
-    public function handle() {
+    public function handle()
+    {
         try {
             $rawInput = file_get_contents('php://input');
             $input = json_decode($rawInput, true);

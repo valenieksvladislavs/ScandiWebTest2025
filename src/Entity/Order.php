@@ -17,16 +17,40 @@ class Order extends BaseEntity
         $this->id = Uuid::uuid4()->toString();
     }
 
-    public function getTotal(): float { return $this->total; }
-    public function setTotal(float $total): self { $this->total = $total; return $this; }
+    public function getTotal(): float
+    {
+        return $this->total;
+    }
+    public function setTotal(float $total): self
+    {
+        $this->total = $total;
+        return $this;
+    }
 
-    public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
 
-    public function getCreatedAt(): string { return $this->createdAt; }
-    public function setCreatedAt(string $createdAt): self { $this->createdAt = $createdAt; return $this; }
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
 
-    protected static function getTableName(): string { return 'orders'; }
+    protected static function getTableName(): string
+    {
+        return 'orders';
+    }
 
     protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
     {

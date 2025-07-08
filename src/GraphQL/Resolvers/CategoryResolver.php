@@ -9,7 +9,9 @@ use PDO;
 
 class CategoryResolver
 {
-    public function __construct(private PDO $pdo) {}
+    public function __construct(private PDO $pdo)
+    {
+    }
 
     public function getCategories(): array
     {

@@ -39,4 +39,4 @@ class AttributeSetType extends ObjectType
             ]
         ]);
     }
-} 
+}

@@ -7,7 +7,7 @@ namespace App\Entity;
 class Currency extends BaseEntity
 {
     private string $label;
-    
+
     private string $symbol;
 
     public function getLabel(): string
@@ -33,23 +33,23 @@ class Currency extends BaseEntity
     }
 
     protected static function getTableName(): string
-	{
-		return 'currencies';
-	}
+    {
+        return 'currencies';
+    }
 
-	protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
-	{
-		return (new self($pdo))
-			->setId($row["{$prefix}id"] ?? null)
-			->setLabel($row["{$prefix}label"] ?? null)
+    protected static function fromAssoc(\PDO $pdo, array $row, ?string $prefix = null): self
+    {
+        return (new self($pdo))
+            ->setId($row["{$prefix}id"] ?? null)
+            ->setLabel($row["{$prefix}label"] ?? null)
             ->setSymbol($row["{$prefix}symbol"] ?? null);
-	}
+    }
 
-	protected function getDataForSave(): array
-	{
-		return [
-			'label' => $this->label,
-			'symbol' => $this->symbol
-		];
-	}
+    protected function getDataForSave(): array
+    {
+        return [
+            'label' => $this->label,
+            'symbol' => $this->symbol
+        ];
+    }
 }

@@ -91,8 +91,8 @@ class Schema
                             ],
                             'resolve' => function ($root, $args) {
                                 $resolver = new OrderResolver($GLOBALS['pdo']);
-                                $items = array_map(function($item) {
-                                    $item['attributes'] = isset($item['attributes']) ? json_decode($item['attributes'], true) : [];
+                                $items = array_map(function ($item) {
+                                    $item['attributes'] = json_decode($item['attributes'] ?? '[]', true);
                                     return $item;
                                 }, $args['items']);
                                 return $resolver->createOrder($items);
