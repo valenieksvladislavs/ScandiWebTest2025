@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\GraphQL;
 
 use App\GraphQL\Resolvers\CategoryResolver;
@@ -14,7 +16,6 @@ use App\GraphQL\Resolvers\ProductResolver;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema as GraphQLSchema;
-use App\Service\OrderService;
 use GraphQL\Type\Definition\InputObjectType;
 
 class Schema
