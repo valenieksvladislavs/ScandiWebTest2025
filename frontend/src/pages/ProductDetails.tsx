@@ -1,13 +1,14 @@
 import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
 import ArrowLeft from '../assets/images/arrow-left.svg?react';
 import ArrowRight from '../assets/images/arrow-right.svg?react';
 import { toKebabCase } from '../helpers/to-kebab-case';
 import { useCartUI } from '../context/CartUIContext';
+import parse from 'html-react-parser';
 const GET_PRODUCT = gql`
   query GetProduct($id: String!) {
     product(id: $id) {
@@ -51,6 +52,7 @@ const PageContainer = styled.div`
 const Gallery = styled.div`
   display: flex;
   flex: 1;
+  align-items: flex-start;
 `;
 
 const Thumbnails = styled.div`
@@ -231,6 +233,21 @@ const ProductDetails = () => {
   const { addToCart } = useCart();
   const { toggle } = useCartUI();
 
+  const mainImageRef = useRef<HTMLDivElement>(null);
+  const [mainImageHeight, setMainImageHeight] = useState<number>(0);
+
+  const updateHeight = () => {
+    if (mainImageRef.current) {
+      setMainImageHeight(mainImageRef.current.offsetHeight);
+    }
+  };
+
+  useEffect(() => {
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
   const { loading, error, data } = useQuery(GET_PRODUCT, {
     variables: { id }
   });
@@ -263,7 +280,7 @@ const ProductDetails = () => {
   return (
     <PageContainer>
       <Gallery data-testid='product-gallery'>
-        <Thumbnails>
+        <Thumbnails style={{ maxHeight: mainImageHeight || undefined, overflowY: 'auto' }}>
           {gallery.map((image: string, index: number) => (
             <Thumbnail
               key={index}
@@ -273,8 +290,8 @@ const ProductDetails = () => {
             />
           ))}
         </Thumbnails>
-        <MainImageWrapper>
-          <MainImage src={gallery[selectedImage]} alt={product?.name} />
+        <MainImageWrapper ref={mainImageRef}>
+          <MainImage src={gallery[selectedImage]} alt={product?.name} onLoad={updateHeight} />
           {gallery.length > 1 && (
             <>
               <ArrowLeftBtn onClick={handlePrev} style={{ left: 12 }}><ArrowLeft /></ArrowLeftBtn>
@@ -341,7 +358,9 @@ const ProductDetails = () => {
           <CartIcon />
           {!product?.inStock ? 'OUT OF STOCK' : 'ADD TO CART'}
         </AddToCartButton>
-        <Description data-testid='product-description' dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
+        <Description data-testid='product-description'>
+          {parse(product?.description || '')}
+        </Description>
       </InfoCol>
     </PageContainer>
   );

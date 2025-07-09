@@ -14,6 +14,12 @@ const GET_PRODUCTS = gql`
       brand
       inStock
       gallery
+      attributes {
+        name
+        items {
+          value
+        }
+      }
       prices {
         amount
         currency {
@@ -158,7 +164,12 @@ const ProductList = () => {
           const price = product.prices[0];
           const outOfStock = !product.inStock;
           return (
-            <ProductCard data-testid={`product-${toKebabCase(product.name)}`} key={product.id} to={!outOfStock ? `/${currentCategory}/${product.id}` : ''} style={{ opacity: outOfStock ? 0.5 : 1 }}>
+            <ProductCard
+              data-testid={`product-${toKebabCase(product.name)}`}
+              key={product.id}
+              to={`/${currentCategory}/${product.id}`}
+              style={{ opacity: outOfStock ? 0.5 : 1 }}
+            >
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
                 {outOfStock && <OutOfStockOverlay>OUT OF STOCK</OutOfStockOverlay>}
@@ -169,12 +180,21 @@ const ProductList = () => {
                     data-testid='add-to-cart'
                     onClick={e => {
                       e.preventDefault();
+                      const attributes: Record<string, string> = {};
+                      if (product.attributes) {
+                        product.attributes.forEach((attr: any) => {
+                          if (attr.items && attr.items.length > 0) {
+                            attributes[attr.name] = attr.items[0].value;
+                          }
+                        });
+                      }
+                      
                       addToCart({
                         id: product.id,
                         name: product.name,
                         price: price.amount,
                         quantity: 1,
-                        attributes: {},
+                        attributes,
                         image: product.gallery?.[0]
                       });
                       toggle();
