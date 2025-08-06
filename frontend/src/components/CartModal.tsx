@@ -74,7 +74,7 @@ const ItemInfo = styled.div`
 `;
 
 const ItemName = styled.div`
-  font-size: 1.2rem;
+  font-size: 18px;
   color: ${props => props.theme.colors.text};
   margin-bottom: 4px;
 `;
@@ -83,6 +83,7 @@ const ItemPrice = styled.div`
   color: ${props => props.theme.colors.text};
   font-weight: 600;
   margin-bottom: 4px;
+  font-size: 16px;
 `;
 
 const AttributeRow = styled.div`
@@ -90,7 +91,10 @@ const AttributeRow = styled.div`
 `;
 
 const AttributeLabel = styled.span`
-  margin-right: 8px;
+  display: block;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 8px 0;
   font-weight: 500;
 `;
 
@@ -138,8 +142,8 @@ const QtyBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border: 1px solid ${props => props.theme.colors.text};
   border-radius: 0;
   background: ${props => props.theme.colors.backgroundLight};
@@ -328,9 +332,9 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
                     {renderAttributes(item)}
                   </ItemInfo>
                   <QuantityControls>
-                    <QtyBtn onClick={() => handleInc(item)} data-testid='cart-item-amount-increase'><AddIcon /></QtyBtn>
+                    <QtyBtn onClick={() => handleInc(item)} data-testid='cart-item-amount-increase'><AddIcon width={16} height={16} /></QtyBtn>
                     <span>{item.quantity}</span>
-                    <QtyBtn onClick={() => handleDec(item)} data-testid='cart-item-amount-decrease'><RemoveIcon /></QtyBtn>
+                    <QtyBtn onClick={() => handleDec(item)} data-testid='cart-item-amount-decrease'><RemoveIcon width={16} height={16} /></QtyBtn>
                   </QuantityControls>
                   <ItemImage src={item.image} alt={item.name} />
                 </CartItemRow>
