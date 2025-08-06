@@ -100,7 +100,6 @@ const ArrowBtn = styled.button`
   justify-content: center;
   cursor: pointer;
   z-index: 2;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 0;
   svg {
     width: 18px;

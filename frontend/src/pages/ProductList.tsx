@@ -48,7 +48,6 @@ const ProductGrid = styled.div`
 
 const ProductCard = styled(Link)`
   background: ${props => props.theme.colors.backgroundLight};
-  box-shadow: 0 2px 8px rgba(168, 172, 176, 0.19);
   display: flex;
   flex-direction: column;
   position: relative;

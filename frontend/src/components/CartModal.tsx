@@ -33,7 +33,7 @@ const ModalContent = styled.div`
   max-width: 420px;
   max-height: 100%;
   overflow-y: auto;
-  padding: 24px 24px 16px 24px;
+  padding: 32px 16px;
   margin: 0;
 `;
 
@@ -50,9 +50,11 @@ const CartTitle = styled.h3`
 `;
 
 const CartList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   list-style: none;
   padding: 0;
-  margin: 0 0 16px 0;
 `;
 
 const CartItemRow = styled.li<{ $invalid?: boolean }>`
@@ -60,8 +62,6 @@ const CartItemRow = styled.li<{ $invalid?: boolean }>`
   align-items: stretch;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderLight};
   background: ${({ $invalid }) => $invalid ? 'rgba(255, 0, 0, 0.06)' : 'transparent'};
   border-left: ${({ $invalid, theme }) => $invalid ? `3px solid ${theme.colors.error}` : 'none'};
 `;
@@ -82,11 +82,10 @@ const ItemName = styled.div`
 const ItemPrice = styled.div`
   color: ${props => props.theme.colors.text};
   font-weight: 600;
-  margin-bottom: 1.2rem;
+  margin-bottom: 4px;
 `;
 
 const AttributeRow = styled.div`
-  margin: 4px 0 8px 0;
   font-size: 0.95em;
 `;
 
@@ -95,33 +94,36 @@ const AttributeLabel = styled.span`
   font-weight: 500;
 `;
 
-const AttributeBtnGroup = styled.div`
-  margin: 0 -4px;
+const AttributeItemGroup = styled.div`
+  margin: -4px;
 `;
 
-const AttributeBtn = styled.button<{ active?: boolean }>`
-  min-width: 32px;
-  min-height: 32px;
+const AttributeItem = styled.div<{ active?: boolean }>`
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+  padding: 4px;
   margin: 4px;
-  padding: 0 10px;
   border: 1px solid ${props => props.theme.colors.text};
   background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
   color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
   font-weight: 500;
-  font-size: 1em;
+  font-size: 14px;
+  cursor: default;
   border-radius: 0;
   transition: all 0.15s;
 `;
 
-const ColorBtn = styled.button<{ color: string; active?: boolean }>`
-  width: 32px;
-  height: 32px;
+const ColorBtn = styled.div<{ color: string; active?: boolean }>`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
   border: 2px solid ${({ active, color, theme }) => (active ? theme.colors.primary : color === theme.colors.backgroundLight ? '#ccc' : '#eee')};
   background: ${({ color }) => color};
+  cursor: default;
   border-radius: 0;
   margin: 4px;
   outline: ${({ active, theme }) => (active ? `2px solid ${theme.colors.primary}` : 'none')};
-  padding: 0;
 `;
 
 const QuantityControls = styled.div`
@@ -162,7 +164,7 @@ const TotalRow = styled.div`
   align-items: center;
   font-size: 1.1rem;
   font-weight: 700;
-  margin: 24px 0 16px 0;
+  margin: 24px 0;
 `;
 
 const DisabledHint = styled.div`
@@ -189,12 +191,6 @@ const PlaceOrderBtn = styled.button`
   &:hover {
     background: ${props => props.theme.colors.primaryHover};
   }
-`;
-
-const AttributeWarning = styled.div`
-  color: ${props => props.theme.colors.error};
-  font-size: 0.95em;
-  margin-top: 4px;
 `;
 
 const GET_PRODUCTS = gql`
@@ -224,7 +220,7 @@ interface CartModalProps {
 }
 
 const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
-  const { items, addToCart, removeFromCart, updateAttributes, clearCart } = useCart();
+  const { items, addToCart, removeFromCart, clearCart } = useCart();
   const { data: productsData } = useQuery(GET_PRODUCTS);
   const [createOrder, { loading: orderLoading }] = useMutation(CREATE_ORDER);
 
@@ -245,42 +241,35 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
   const renderAttributes = (item: CartItem) => {
     const product = getProductById(item.id);
     if (!product) return null;
-    return product.attributes.map((attr: any) => {
-      const isSelected = item.attributes && item.attributes[attr.name];
-      return (
-        <AttributeRow key={attr.name}>
-          <AttributeLabel>{attr.name}:</AttributeLabel>
-          <AttributeBtnGroup data-testid={`cart-item-attribute-${toKebabCase(attr.name)}`}>
-            {attr.items.map((option: any) => {
-              const selected = item.attributes[attr.name] === option.value;
-              const testIdAttr = `cart-item-attribute-${toKebabCase(attr.name)}-${option.value}${selected ? '-selected' : ''}`
-              const onClick = () => updateAttributes(item.id, { ...item.attributes, [attr.name]: option.value });
+    return product.attributes.map((attr: any) => (
+      <AttributeRow key={attr.name}>
+        <AttributeLabel>{attr.name}:</AttributeLabel>
+        <AttributeItemGroup data-testid={`cart-item-attribute-${toKebabCase(attr.name)}`}>
+          {attr.items.map((option: any) => {
+            const selected = item.attributes[attr.name] === option.value;
+            const testIdAttr = `cart-item-attribute-${toKebabCase(attr.name)}-${option.value}${selected ? '-selected' : ''}`;
 
-              return attr.type === 'swatch' ? (
-                <ColorBtn
-                  key={option.value}
-                  color={option.value}
-                  active={selected}
-                  onClick={onClick}
-                  title={option.value}
-                  data-testid={testIdAttr}
-                />
-              ) : (
-                <AttributeBtn
-                  key={option.value}
-                  active={selected}
-                  onClick={onClick}
-                  data-testid={testIdAttr}
-                >
-                  {option.displayValue}
-                </AttributeBtn>
-              )
+            return attr.type === 'swatch' ? (
+              <ColorBtn
+                key={option.value}
+                color={option.value}
+                active={selected}
+                title={option.value}
+                data-testid={testIdAttr}
+              />
+            ) : (
+              <AttributeItem
+                key={option.value}
+                active={selected}
+                data-testid={testIdAttr}
+              >
+                {option.displayValue}
+              </AttributeItem>
+            );
           })}
-          </AttributeBtnGroup>
-          {!isSelected && <AttributeWarning>Choose {attr.name.toLowerCase()}</AttributeWarning>}
-        </AttributeRow>
-      );
-    });
+        </AttributeItemGroup>
+      </AttributeRow>
+    ));
   };
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
