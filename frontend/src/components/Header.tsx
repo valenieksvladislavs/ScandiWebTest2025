@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import CartIcon from '../assets/images/cart.svg?react';
 import { useCartUI } from '../context/CartUIContext';
-
+import LogoIcon from '../assets/images/logo.svg?react';
 const GET_CATEGORIES = gql`
   query GetCategories {
     categories {
@@ -33,6 +33,7 @@ const HeaderContent = styled.div`
 `;
 
 const CategoriesMenu = styled.nav`
+  flex: 1;
   display: flex;
   gap: 1.5rem;
 `;
@@ -58,6 +59,12 @@ const CategoryLink = styled(Link) <{ $active?: boolean }>`
     color: ${props.theme.colors.primary};
     border-bottom: 2px solid ${props.theme.colors.primary};
   `}
+`;
+
+const CartButtonContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const CartButton = styled.button`
@@ -150,10 +157,13 @@ const Header = () => {
             )
           })}
         </CategoriesMenu>
-        <CartButton data-testid='cart-btn' onClick={toggle}>
-          <CartIcon style={{ color: '#43464E' }} />
-          {totalCount > 0 && <CartCount>{totalCount}</CartCount>}
-        </CartButton>
+        <LogoIcon />
+        <CartButtonContainer>
+          <CartButton data-testid='cart-btn' onClick={toggle}>
+            <CartIcon style={{ color: '#43464E' }} />
+            {totalCount > 0 && <CartCount>{totalCount}</CartCount>}
+          </CartButton>
+        </CartButtonContainer>
       </HeaderContent>
     </HeaderContainer>
   );
