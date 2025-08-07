@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRef, useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import CartIcon from '../assets/images/cart.svg?react';
 import ArrowLeft from '../assets/images/arrow-left.svg?react';
 import ArrowRight from '../assets/images/arrow-right.svg?react';
 import { toKebabCase } from '../helpers/to-kebab-case';
