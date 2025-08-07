@@ -32,8 +32,7 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: 32px;
   background: ${props => props.theme.colors.backgroundLight};
-  min-width: 340px;
-  max-width: 420px;
+  max-width: 325px;
   max-height: 100%;
   overflow-y: auto;
   padding: 32px 16px;
@@ -125,6 +124,7 @@ const QuantityControls = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 16px;
   gap: 8px;
   justify-content: space-between;
 `;
@@ -176,9 +176,10 @@ const PlaceOrderBtn = styled.button`
   color: ${props => props.theme.colors.backgroundLight};
   border: none;
   border-radius: 4px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 13px;
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
   &:hover {
