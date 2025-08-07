@@ -35,7 +35,7 @@ const CategoryTitle = styled.h1`
   font-size: 42px;
   line-height: 1.6;
   font-weight: 400;
-  margin: 80px 0 103px 0;
+  margin: 60px 0 103px 0;
   color: ${props => props.theme.colors.text};
   text-transform: uppercase;
 `;
@@ -115,9 +115,9 @@ const ProductName = styled.div`
   font-weight: 300;
 `;
 
-const ProductPrice = styled.div<{outOfStock: boolean}>`
+const ProductPrice = styled.div<{disabled: boolean}>`
   font-weight: 400;
-  color: ${props => props.outOfStock ? props.theme.colors.outOfStock : props.theme.colors.text};
+  color: ${props => props.disabled ? props.theme.colors.outOfStock : props.theme.colors.text};
 `;
 
 const AddToCartBtn = styled.button`
@@ -207,7 +207,7 @@ const ProductList = () => {
               </ProductImageWrapper>
               <ProductInfo>
                 <ProductName>{product.name}</ProductName>
-                <ProductPrice outOfStock={outOfStock}>
+                <ProductPrice disabled={outOfStock}>
                   {price.currency.symbol}{price.amount.toFixed(2)}
                 </ProductPrice>
               </ProductInfo>

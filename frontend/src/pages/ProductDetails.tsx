@@ -41,7 +41,7 @@ const GET_PRODUCT = gql`
 const PageContainer = styled.div`
   display: flex;
   gap: 40px;
-  margin: 40px auto 0 auto;
+  margin: 60px auto 0 auto;
   align-items: flex-start;
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -53,23 +53,21 @@ const Gallery = styled.div`
   display: flex;
   flex: 1;
   align-items: flex-start;
-  gap: 26px;
+  gap: 40px;
 `;
 
 const Thumbnails = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 `;
 
-const Thumbnail = styled.img<{ active?: boolean }>`
+const Thumbnail = styled.img<{ checked?: boolean }>`
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border: 2px solid ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
-  border-radius: 4px;
+  border: 1px solid ${({ checked, theme }) => (checked ? theme.colors.primary : 'transparent')};
   cursor: pointer;
-  background: ${props => props.theme.colors.buttonLight};
 `;
 
 const MainImageWrapper = styled.div`
@@ -89,12 +87,10 @@ const MainImage = styled.img`
 
 const ArrowBtn = styled.button`
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.73);
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,18 +105,17 @@ const ArrowBtn = styled.button`
 `;
 
 const ArrowLeftBtn = styled(ArrowBtn)`
-  left: 12px;
+  left: 16px;
 `;
 const ArrowRightBtn = styled(ArrowBtn)`
-  right: 12px;
+  right: 16px;
 `;
 
 const InfoCol = styled.div`
   display: flex;
-  width: 400px;
+  width: 300px;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 24px;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -128,82 +123,93 @@ const InfoCol = styled.div`
 `;
 
 const ProductName = styled.h1`
-  font-size: 2rem;
+  font-size: 30px;
+  line-height: 27px;
   font-weight: 600;
   color: ${props => props.theme.colors.text};
-  margin: 0 0 16px 0;
+  margin-bottom: 32px;
 `;
 
-const AttributeBlock = styled.div`
-  margin-bottom: 16px;
+const AttributeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  margin-bottom: 27px;
+`;
+
+const AttributeRow = styled.div`
 `;
 
 const AttributeLabel = styled.div`
-  font-size: 1rem;
-  font-weight: 700;
   color: ${props => props.theme.colors.text};
+  font-family: "Roboto Condensed";
+  font-size: 18px;
+  font-weight: 700;
   margin-bottom: 8px;
+  text-transform: uppercase;
 `;
 
 const AttributeBtnGroup = styled.div`
-  margin: 0 -4px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 `;
 
-const AttributeBtn = styled.button<{ active?: boolean }>`
-  min-width: 48px;
-  min-height: 40px;
-  padding: 0 16px;
+const AttributeBtn = styled.button<{ checked?: boolean }>`
   border: 1px solid ${props => props.theme.colors.text};
-  background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
-  color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
-  font-weight: 500;
-  font-size: 1rem;
+  background: ${({ checked, theme }) => (checked ? theme.colors.text : theme.colors.backgroundLight)};
+  color: ${({ checked, theme }) => (checked ? theme.colors.backgroundLight : theme.colors.text)};
+  font-family: "Source Sans 3";
+  min-width: 60px;
+  padding: 12.5px 16px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
   cursor: pointer;
   border-radius: 0;
   transition: all 0.15s;
-  margin: 4px;
 `;
 
-const ColorBtn = styled.button<{ color: string; active?: boolean }>`
+const ColorBtn = styled.button<{ color: string; checked?: boolean }>`
   width: 32px;
   height: 32px;
-  border: 2px solid ${({ active, color, theme }) => (active ? theme.colors.primary : color === theme.colors.backgroundLight ? '#ccc' : '#eee')};
   background: ${({ color }) => color};
   cursor: pointer;
   border-radius: 0;
-  margin-right: 8px;
-  outline: ${({ active, theme }) => (active ? `2px solid ${theme.colors.primary}` : 'none')};
+  outline: ${({ checked, theme }) => (checked ? `1px solid ${theme.colors.primary}` : 'none')}!important;
+  outline-offset: 1px;
   padding: 0;
 `;
 
 const PriceLabel = styled.div`
-  font-size: 1rem;
-  font-weight: 700;
   color: ${props => props.theme.colors.text};
-  margin-bottom: 8px;
+  font-family: "Roboto Condensed";
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
 `;
 
 const Price = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
   color: ${props => props.theme.colors.text};
-  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 18px;
+  padding: 14px 0;
+  margin-bottom: 20px;
 `;
 
 const AddToCartButton = styled.button`
   background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.backgroundLight};
   border: none;
-  padding: 18px 0;
-  font-size: 1.1rem;
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1.2;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
   border-radius: 0;
   &:hover {
     background: ${props => props.theme.colors.primaryHover};
@@ -212,18 +218,13 @@ const AddToCartButton = styled.button`
     background: ${props => props.theme.colors.disabled};
     cursor: not-allowed;
   }
-  svg {
-    width: 24px;
-    height: 24px;
-    fill: ${props => props.theme.colors.backgroundLight};
-  }
 `;
 
 const Description = styled.div`
-  font-size: 1rem;
   color: ${props => props.theme.colors.text};
-  margin-top: 8px;
-  line-height: 1.5;
+  font-family: Roboto;
+  font-size: 16px;
+  line-height: 1.6;
 `;
 
 const ProductDetails = () => {
@@ -285,7 +286,7 @@ const ProductDetails = () => {
             <Thumbnail
               key={index}
               src={image}
-              active={index === selectedImage}
+              checked={index === selectedImage}
               onClick={() => setSelectedImage(index)}
             />
           ))}
@@ -302,38 +303,40 @@ const ProductDetails = () => {
       </Gallery>
       <InfoCol>
         <ProductName>{product?.name}</ProductName>
-        {product?.attributes.map((attribute: any) => (
-          <AttributeBlock key={attribute.name}>
-            <AttributeLabel>{attribute.name}:</AttributeLabel>
-            <AttributeBtnGroup data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>
-              {attribute.items.map((item: any) => {
-                const testId = `product-attribute-${toKebabCase(attribute.name)}-${item.value}`;
-                const onClick = () => {
-                  handleAttributeSelect(attribute.name, item.value);
-                }
+        <AttributeContainer>
+          {product?.attributes.map((attribute: any) => (
+            <AttributeRow key={attribute.name}>
+              <AttributeLabel>{attribute.name}:</AttributeLabel>
+              <AttributeBtnGroup data-testid={`product-attribute-${toKebabCase(attribute.name)}`}>
+                {attribute.items.map((item: any) => {
+                  const testId = `product-attribute-${toKebabCase(attribute.name)}-${item.value}`;
+                  const onClick = () => {
+                    handleAttributeSelect(attribute.name, item.value);
+                  }
 
-                return attribute.type === 'swatch' ? (
-                  <ColorBtn
-                    data-testid={testId}
-                    key={item.value}
-                    color={item.value}
-                    active={selectedAttributes[attribute.name] === item.value}
-                    onClick={onClick}
-                  />
-                ) : (
-                  <AttributeBtn
-                    data-testid={testId}
-                    key={item.value}
-                    active={selectedAttributes[attribute.name] === item.value}
-                    onClick={onClick}
-                  >
-                    {item.displayValue}
-                  </AttributeBtn>
-                )
-              })}
-            </AttributeBtnGroup>
-          </AttributeBlock>
-        ))}
+                  return attribute.type === 'swatch' ? (
+                    <ColorBtn
+                      data-testid={testId}
+                      key={item.value}
+                      color={item.value}
+                      checked={selectedAttributes[attribute.name] === item.value}
+                      onClick={onClick}
+                    />
+                  ) : (
+                    <AttributeBtn
+                      data-testid={testId}
+                      key={item.value}
+                      checked={selectedAttributes[attribute.name] === item.value}
+                      onClick={onClick}
+                    >
+                      {item.displayValue}
+                    </AttributeBtn>
+                  )
+                })}
+              </AttributeBtnGroup>
+            </AttributeRow>
+          ))}
+        </AttributeContainer>
         <div>
           <PriceLabel>PRICE:</PriceLabel>
           <Price>
@@ -355,7 +358,6 @@ const ProductDetails = () => {
             });
           }}
         >
-          <CartIcon />
           {!product?.inStock ? 'OUT OF STOCK' : 'ADD TO CART'}
         </AddToCartButton>
         <Description data-testid='product-description'>

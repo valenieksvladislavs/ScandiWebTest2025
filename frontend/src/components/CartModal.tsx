@@ -98,25 +98,26 @@ const AttributeItemGroup = styled.div`
   gap: 4px;
 `;
 
-const AttributeItem = styled.div<{ active?: boolean }>`
+const AttributeItem = styled.div<{ checked?: boolean }>`
+  border: 1px solid ${props => props.theme.colors.text};
+  background: ${({ checked, theme }) => (checked ? theme.colors.text : theme.colors.backgroundLight)};
+  color: ${({ checked, theme }) => (checked ? theme.colors.backgroundLight : theme.colors.text)};
+  font-family: "Source Sans 3";
   display: inline-block;
   text-align: center;
   line-height: 1;
   padding: 4px;
-  border: 1px solid ${props => props.theme.colors.text};
-  background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
-  color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
   font-weight: 500;
   font-size: 14px;
   cursor: default;
 `;
 
-const ColorBtn = styled.div<{ color: string; active?: boolean }>`
+const ColorBtn = styled.div<{ color: string; checked?: boolean }>`
   display: inline-block;
   width: 16px;
   height: 16px;
   background: ${({ color }) => color};
-  outline: ${({ active, theme }) => (active ? `1px solid ${theme.colors.primary}` : 'none')};
+  outline: ${({ checked, theme }) => (checked ? `1px solid ${theme.colors.primary}` : 'none')};
   outline-offset: 1px;
 `;
 
@@ -175,7 +176,6 @@ const PlaceOrderBtn = styled.button`
   background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.backgroundLight};
   border: none;
-  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
@@ -247,14 +247,14 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
               <ColorBtn
                 key={option.value}
                 color={option.value}
-                active={selected}
+                checked={selected}
                 title={option.value}
                 data-testid={testIdAttr}
               />
             ) : (
               <AttributeItem
                 key={option.value}
-                active={selected}
+                checked={selected}
                 data-testid={testIdAttr}
               >
                 {option.displayValue}
@@ -315,7 +315,7 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
           ) : (
             <CartList>
               {items.map((item, idx) => (
-                <CartItemRow key={item.id} $invalid={invalidItems[idx]}>
+                <CartItemRow key={idx} $invalid={invalidItems[idx]}>
                   <ItemInfo>
                     <ItemName>{item.name}</ItemName>
                     <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
