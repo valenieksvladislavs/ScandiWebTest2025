@@ -28,6 +28,9 @@ const ModalContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   background: ${props => props.theme.colors.backgroundLight};
   min-width: 340px;
   max-width: 420px;
@@ -38,14 +41,12 @@ const ModalContent = styled.div`
 `;
 
 const CartTitle = styled.h3`
-  margin: 0 0 16px 0;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.6;
   span {
-    font-weight: 400;
+    font-weight: 500;
     color: ${props => props.theme.colors.text};
     font-size: 1rem;
-    margin-left: 4px;
   }
 `;
 
@@ -61,9 +62,7 @@ const CartItemRow = styled.li<{ $invalid?: boolean }>`
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: 12px;
-  background: ${({ $invalid }) => $invalid ? 'rgba(255, 0, 0, 0.06)' : 'transparent'};
-  border-left: ${({ $invalid, theme }) => $invalid ? `3px solid ${theme.colors.error}` : 'none'};
+  gap: 8px;
 `;
 
 const ItemInfo = styled.div`
@@ -74,20 +73,16 @@ const ItemInfo = styled.div`
 `;
 
 const ItemName = styled.div`
-  font-size: 18px;
   color: ${props => props.theme.colors.text};
-  margin-bottom: 4px;
+  font-size: 18px;
+  line-height: 1.6;
 `;
 
 const ItemPrice = styled.div`
   color: ${props => props.theme.colors.text};
-  font-weight: 600;
-  margin-bottom: 4px;
   font-size: 16px;
-`;
-
-const AttributeRow = styled.div`
-  font-size: 0.95em;
+  font-weight: 400;
+  line-height: 1.6;
 `;
 
 const AttributeLabel = styled.span`
@@ -99,7 +94,9 @@ const AttributeLabel = styled.span`
 `;
 
 const AttributeItemGroup = styled.div`
-  margin: -4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 `;
 
 const AttributeItem = styled.div<{ active?: boolean }>`
@@ -107,27 +104,21 @@ const AttributeItem = styled.div<{ active?: boolean }>`
   text-align: center;
   line-height: 1;
   padding: 4px;
-  margin: 4px;
   border: 1px solid ${props => props.theme.colors.text};
   background: ${({ active, theme }) => (active ? theme.colors.text : theme.colors.backgroundLight)};
   color: ${({ active, theme }) => (active ? theme.colors.backgroundLight : theme.colors.text)};
   font-weight: 500;
   font-size: 14px;
   cursor: default;
-  border-radius: 0;
-  transition: all 0.15s;
 `;
 
 const ColorBtn = styled.div<{ color: string; active?: boolean }>`
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid ${({ active, color, theme }) => (active ? theme.colors.primary : color === theme.colors.backgroundLight ? '#ccc' : '#eee')};
+  width: 16px;
+  height: 16px;
   background: ${({ color }) => color};
-  cursor: default;
-  border-radius: 0;
-  margin: 4px;
-  outline: ${({ active, theme }) => (active ? `2px solid ${theme.colors.primary}` : 'none')};
+  outline: ${({ active, theme }) => (active ? `1px solid ${theme.colors.primary}` : 'none')};
+  outline-offset: 1px;
 `;
 
 const QuantityControls = styled.div`
@@ -165,17 +156,18 @@ const Empty = styled.div`
 const TotalRow = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 24px 0;
+  align-items: flex-end;
+  font-size: 16px;
 `;
 
-const DisabledHint = styled.div`
-  color: ${props => props.theme.colors.error};
-  font-size: 0.98em;
-  margin-top: 8px;
-  text-align: center;
+const TotalHeader = styled.span`
+  line-height: 18px;
+  font-weight: 500;
+`;
+
+const TotalValue = styled.span`
+  line-height: 1.6;
+  font-weight: 700;
 `;
 
 const PlaceOrderBtn = styled.button`
@@ -188,10 +180,7 @@ const PlaceOrderBtn = styled.button`
   font-weight: 700;
   padding: 16px 0;
   cursor: pointer;
-  margin-top: 8px;
   transition: background 0.2s, opacity 0.2s;
-  opacity: ${({ disabled }) => disabled ? 0.5 : 1};
-  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   &:hover {
     background: ${props => props.theme.colors.primaryHover};
   }
@@ -246,7 +235,7 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
     const product = getProductById(item.id);
     if (!product) return null;
     return product.attributes.map((attr: any) => (
-      <AttributeRow key={attr.name}>
+      <div key={attr.name}>
         <AttributeLabel>{attr.name}:</AttributeLabel>
         <AttributeItemGroup data-testid={`cart-item-attribute-${toKebabCase(attr.name)}`}>
           {attr.items.map((option: any) => {
@@ -272,7 +261,7 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
             );
           })}
         </AttributeItemGroup>
-      </AttributeRow>
+      </div>
     ));
   };
 
@@ -342,13 +331,12 @@ const CartModal: React.FC<CartModalProps> = ({ onClose }) => {
             </CartList>
           )}
           <TotalRow>
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <TotalHeader>Total</TotalHeader>
+            <TotalValue>${total.toFixed(2)}</TotalValue>
           </TotalRow>
           <PlaceOrderBtn onClick={handlePlaceOrder} disabled={orderLoading || items.length === 0 || !allAttributesSelected}>
             {orderLoading ? 'Ordering...' : 'PLACE ORDER'}
           </PlaceOrderBtn>
-          {!allAttributesSelected && <DisabledHint>Choose all options</DisabledHint>}
         </ModalContent>
       </ModalContainer>
     </ModalOverlay>
