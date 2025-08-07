@@ -32,9 +32,10 @@ const GET_PRODUCTS = gql`
 `;
 
 const CategoryTitle = styled.h1`
-  font-size: 2rem;
+  font-size: 42px;
+  line-height: 1.6;
   font-weight: 400;
-  margin: 32px 0 24px 0;
+  margin: 80px 0 103px 0;
   color: ${props => props.theme.colors.text};
   text-transform: uppercase;
 `;
@@ -42,22 +43,28 @@ const CategoryTitle = styled.h1`
 const ProductGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px 24px;
-  padding: 0 0 2rem 0;
+  gap: 103px 40px;
+  padding-bottom: 40px;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 const ProductCard = styled(Link)`
   background: ${props => props.theme.colors.backgroundLight};
   display: flex;
   flex-direction: column;
+  gap: 24px;
   position: relative;
   overflow: hidden;
   text-decoration: none;
-  padding: 20px;
-  transition: box-shadow 0.2s, transform 0.2s;
+  padding: 16px;
+  transition: box-shadow 0.2s;
   &:hover {
-    box-shadow: 0 4px 16px rgba(168, 172, 176, 0.25);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 35px #A8ACB030;
     .add-to-cart-btn {
       opacity: 1;
       pointer-events: auto;
@@ -90,7 +97,8 @@ const OutOfStockOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 24px;
+  line-height: 1.6;
   color: ${props => props.theme.colors.outOfStock};
   font-weight: 400;
   z-index: 2;
@@ -98,23 +106,18 @@ const OutOfStockOverlay = styled.div`
 `;
 
 const ProductInfo = styled.div`
-  padding: 16px 16px 24px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  color: ${props => props.theme.colors.text};
+  font-size: 18px;
+  line-height: 1.6;
 `;
 
 const ProductName = styled.div`
-  font-size: 1.1rem;
-  color: ${props => props.theme.colors.text};
   font-weight: 300;
-  margin-bottom: 4px;
 `;
 
-const ProductPrice = styled.div`
-  font-size: 1.1rem;
-  color: ${props => props.theme.colors.text};
-  font-weight: 500;
+const ProductPrice = styled.div<{outOfStock: boolean}>`
+  font-weight: 400;
+  color: ${props => props.outOfStock ? props.theme.colors.outOfStock : props.theme.colors.text};
 `;
 
 const AddToCartBtn = styled.button`
@@ -167,7 +170,6 @@ const ProductList = () => {
               data-testid={`product-${toKebabCase(product.name)}`}
               key={product.id}
               to={`/${currentCategory}/${product.id}`}
-              style={{ opacity: outOfStock ? 0.5 : 1 }}
             >
               <ProductImageWrapper>
                 <ProductImage src={product.gallery[0]} alt={product.name} />
@@ -205,7 +207,7 @@ const ProductList = () => {
               </ProductImageWrapper>
               <ProductInfo>
                 <ProductName>{product.name}</ProductName>
-                <ProductPrice>
+                <ProductPrice outOfStock={outOfStock}>
                   {price.currency.symbol}{price.amount.toFixed(2)}
                 </ProductPrice>
               </ProductInfo>

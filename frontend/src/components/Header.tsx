@@ -45,8 +45,8 @@ const CategoryLink = styled(Link) <{ $active?: boolean }>`
   text-decoration: none;
   color: ${props => props.theme.colors.text};
   font-size: 16px;
-  font-weight: 500;
-  line-height: 120%;
+  font-weight: 600;
+  line-height: 1.2;
   text-transform: uppercase;
   padding: 0 16px;
   transition: color 0.2s;
