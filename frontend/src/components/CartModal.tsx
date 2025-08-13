@@ -32,6 +32,7 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: 32px;
   background: ${props => props.theme.colors.backgroundLight};
+  width: 100%;
   max-width: 325px;
   max-height: 100%;
   overflow-y: auto;
@@ -68,7 +69,6 @@ const ItemInfo = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const ItemName = styled.div`
